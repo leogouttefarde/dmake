@@ -1,0 +1,24 @@
+
+mainmodule Make {
+
+	readonly CProxy_Master masterProxy;  
+	readonly CProxy_Slave slaveArray;
+	readonly int nSlaves;
+
+	include "Job.h";
+	include "File.h";
+
+	mainchare Master {
+		entry Master(CkArgMsg *m);
+		entry void requestJob(int iSlave);
+		entry void finishJob(File &target);
+	};
+
+
+	array [1D] Slave {
+		entry Slave();
+		entry void run(Job &job);
+	};
+
+};
+
