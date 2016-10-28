@@ -9,9 +9,20 @@ Master::Master(CkArgMsg *m)
 {
 	CkPrintf("Master::Master\n");
 	// init all
+	const char *target = NULL;
+
 	masterProxy = thisProxy;
 	nSlaves = 3;
-	
+
+	if (m->argc > 1) {
+		target = m->argv[1];
+	}
+	else {
+		target = "Makefile";
+	}
+
+	// printf("target = %s\n", target);
+
 
 	CkPrintf("chare array construction\n");
 	// chare array construction
