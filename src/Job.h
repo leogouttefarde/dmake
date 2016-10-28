@@ -24,6 +24,7 @@ public:
     if (p.isUnpacking())
       vals = new int[data];
 
+  	// verif manuelle car data pas forcément 0 pr l'instant
     if (vals)
     PUParray(p, vals, data);
   }
