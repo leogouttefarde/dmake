@@ -1,7 +1,7 @@
 
 #pragma once
 #include "Make.decl.h"
-#include "Slave.h"
+#include "Slave.hpp"
 
 class Master : public CBase_Master {
  public:

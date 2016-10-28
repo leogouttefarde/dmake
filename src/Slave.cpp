@@ -1,5 +1,5 @@
 
-#include "Master.h"
+#include "Master.hpp"
 
 extern /*readonly*/ CProxy_Master masterProxy;
 extern /*readonly*/ CProxy_Slave slaveArray;

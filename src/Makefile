@@ -17,9 +17,9 @@ Make.decl.h: Make.ci
 clean:
 	rm -f *.decl.h *.def.h conv-host *.o Make charmrun
 
-Master.o: Master.C Master.h Make.decl.h
-	$(CHARMC) -c Master.C
+Master.o: Master.cpp Master.hpp Make.decl.h
+	$(CHARMC) -c Master.cpp
 
-Slave.o: Slave.C Slave.h Make.decl.h
-	$(CHARMC) -c Slave.C
+Slave.o: Slave.cpp Slave.hpp Make.decl.h
+	$(CHARMC) -c Slave.cpp
 
