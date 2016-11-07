@@ -50,7 +50,7 @@ public:
 
 	Parser(const std::string path) {
 
-		mFile.open(path, std::fstream::in);
+		mFile.open(path, std::ifstream::in);
 
 		if (mFile.is_open()) {
 			std::cout << "Parser started";
@@ -180,7 +180,7 @@ public:
 
 
 private:
-	std::fstream mFile;
+	std::ifstream mFile;
 	std::string mNext;
 
 	std::map<std::string,Node*> mTargets;
