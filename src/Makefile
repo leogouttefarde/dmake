@@ -20,7 +20,7 @@ Make.decl.h: Make.ci
 clean:
 	rm -f *.decl.h *.def.h conv-host *.o main Make charmrun
 
-Master.o: Master.cpp Master.hpp Make.decl.h
+Master.o: Master.cpp Master.hpp Make.decl.h Parser.hpp
 	$(CHARMC) -c Master.cpp
 
 Slave.o: Slave.cpp Slave.hpp Make.decl.h

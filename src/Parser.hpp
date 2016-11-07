@@ -18,7 +18,7 @@ public:
 		return mName;
 	}
 
-	void addDependency(Node *dep) {
+	void addDependency(const std::string dep) {
 		mDeps.push_back(dep);
 	}
 
@@ -26,7 +26,7 @@ public:
 		mCmds.push_back(cmd);
 	}
 
-	const std::vector<Node*>& getDeps() {
+	const std::vector<std::string>& getDeps() {
 		return mDeps;
 	}
 
@@ -38,7 +38,7 @@ public:
 private:
 	std::string mName;
 
-	std::vector<Node*> mDeps;
+	std::vector<std::string> mDeps;
 	std::vector<std::string> mCmds;
 
 };
@@ -81,7 +81,7 @@ public:
 				boost::algorithm::trim(oName);
 
 				// Remove rule name from buffer
-				mNext = mNext.substr(pos);
+				mNext = mNext.substr(pos + 1);
 
 				return true;
 			}
@@ -95,10 +95,40 @@ public:
 
 	void parseDependencies(Node *pTarget) {
 
+		if (pTarget == NULL) {
+			return;
+		}
+
+		std::stringstream ss(mNext);
+		std::string dep;
+
+		while ( std::getline(ss, dep, ' ') ) {
+			boost::algorithm::trim(dep);
+
+			if (dep.size() > 0) {
+				pTarget->addDependency(dep);
+				std::cout << "Dependency added : '" << dep << "'" << std::endl;
+			}
+		}
 	}
 
 	void parseCommands(Node *pTarget) {
 
+		if (pTarget == NULL) {
+			return;
+		}
+
+		while ( std::getline(mFile, mNext) ) {
+			boost::algorithm::trim(mNext);
+
+			if (mNext.size() > 0) {
+				pTarget->addCmd(mNext);
+				std::cout << "Command added : '" << mNext << "'" << std::endl;
+			}
+			else {
+				break;
+			}
+		}
 	}
 
 	Node* parseTarget() {
@@ -109,12 +139,14 @@ public:
 			return NULL;
 		}
 
+		std::cout << "Target name : '" << name << "'" << std::endl;
+
 		Node *pTarget = new Node(name);
 
 		parseDependencies(pTarget);
 		parseCommands(pTarget);
 
-		std::cout << "Target name : '" << name << "'" << std::endl;
+		std::cout << std::endl;
 
 		return pTarget;
 	}
