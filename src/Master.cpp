@@ -1,5 +1,6 @@
 
 #include "Master.hpp"
+#include "Parser.hpp"
 
 /*readonly*/ CProxy_Master masterProxy;
 /*readonly*/ CProxy_Slave slaveArray;
@@ -20,6 +21,9 @@ Master::Master(CkArgMsg *m)
 	else {
 		target = "Makefile";
 	}
+
+	Parser::ParseFile( target );
+	CkExit();
 
 	// printf("target = %s\n", target);
 

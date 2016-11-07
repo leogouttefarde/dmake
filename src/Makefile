@@ -9,7 +9,7 @@ OBJS = Master.o Slave.o
 all: Make
 
 Make: $(OBJS)
-	$(CHARMC) -language charm++ -o $@ $(OBJS)
+	$(CHARMC) -language charm++ -g -o $@ $(OBJS)
 
 Make.decl.h: Make.ci
 	$(CHARMC) Make.ci
