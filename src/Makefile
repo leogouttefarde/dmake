@@ -5,8 +5,11 @@ CPATH=~/data/charm-6.7.1
 CHARMC=${CPATH}/bin/charmc $(OPTS)
 
 OBJS = Master.o Slave.o
-
+OBJSPARSER = Parser.o
 all: Make
+
+parser: $(OBJSPARSER)
+	g++ Main.cpp -o main $^
 
 Make: $(OBJS)
 	$(CHARMC) -language charm++ -g -o $@ $(OBJS)
@@ -15,7 +18,7 @@ Make.decl.h: Make.ci
 	$(CHARMC) Make.ci
 
 clean:
-	rm -f *.decl.h *.def.h conv-host *.o Make charmrun
+	rm -f *.decl.h *.def.h conv-host *.o main Make charmrun
 
 Master.o: Master.cpp Master.hpp Make.decl.h
 	$(CHARMC) -c Master.cpp
@@ -23,3 +26,5 @@ Master.o: Master.cpp Master.hpp Make.decl.h
 Slave.o: Slave.cpp Slave.hpp Make.decl.h
 	$(CHARMC) -c Slave.cpp
 
+Parser.o: Parser.cpp
+	g++ -o $@ -c $<
