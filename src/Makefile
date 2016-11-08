@@ -21,10 +21,10 @@ clean:
 	rm -f *.decl.h *.def.h conv-host *.o main Make charmrun
 
 Master.o: Master.cpp Master.hpp Make.decl.h Parser.hpp
-	$(CHARMC) -c Master.cpp
+	$(CHARMC) -g -c Master.cpp
 
 Slave.o: Slave.cpp Slave.hpp Make.decl.h
-	$(CHARMC) -c Slave.cpp
+	$(CHARMC) -g -c Slave.cpp
 
 Parser.o: Parser.cpp
 	g++ -o $@ -c $<

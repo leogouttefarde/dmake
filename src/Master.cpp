@@ -22,7 +22,18 @@ Master::Master(CkArgMsg *m)
 		target = "Makefile";
 	}
 
-	Parser::ParseFile( target );
+	std::map<std::string,Node*> map = Parser::ParseFile( target );
+
+	Node *all = map["all"];
+
+	if ( all != NULL ) {
+		all->addDepName("hh");
+		all->setDeps(map);
+	}
+	else {
+		std::cout << "NO all ??" << std::endl;
+	}
+
 	CkExit();
 
 	// printf("target = %s\n", target);

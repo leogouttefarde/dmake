@@ -18,15 +18,19 @@ public:
 		return mName;
 	}
 
-	void addDependency(const std::string dep) {
-		mDeps.push_back(dep);
+	void addDepName(const std::string name) {
+		mDepNames.push_back(name);
 	}
 
 	void addCmd(const std::string cmd) {
 		mCmds.push_back(cmd);
 	}
 
-	const std::vector<std::string>& getDeps() {
+	const std::vector<std::string>& getDepNames() {
+		return mDepNames;
+	}
+
+	const std::vector<Node*>& getDeps() {
 		return mDeps;
 	}
 
@@ -34,14 +38,43 @@ public:
 		return mCmds;
 	}
 
+	void setDeps(std::map<std::string,Node*>& mTargets) {
+
+		std::cout << "setDeps IN " << std::endl;
+
+		for (std::string name : mDepNames) {
+		std::cout << "for " << name << std::endl;
+
+			Node *dep = mTargets[name];
+
+			if (dep != NULL) {
+
+				// Set child deps
+				dep->setDeps(mTargets);
+
+				// Add new dep
+				mDeps.push_back(dep);
+
+			}
+			else {
+				std::cout << "FATAL ERROR : missing dependency "
+					<< name << std::endl;
+			}
+		}
+
+	}
+
 
 private:
 	std::string mName;
 
-	std::vector<std::string> mDeps;
+	std::vector<Node*> mDeps;
+	std::vector<std::string> mDepNames;
+
 	std::vector<std::string> mCmds;
 
 };
+
 
 
 class Parser {
@@ -106,7 +139,7 @@ public:
 			boost::algorithm::trim(dep);
 
 			if (dep.size() > 0) {
-				pTarget->addDependency(dep);
+				pTarget->addDepName(dep);
 				std::cout << "Dependency added : '" << dep << "'" << std::endl;
 			}
 		}
@@ -151,7 +184,7 @@ public:
 		return pTarget;
 	}
 
-	Node* parseFile() {
+	std::map<std::string,Node*>& parseFile() {
 
 		if (IsOk()) {
 			Node *pTarget = NULL;
@@ -166,16 +199,20 @@ public:
 			} while ( pTarget != NULL );
 		}
 
-		return mTargets["all"];
+		return mTargets;
 	}
 
-	static Node* ParseFile(const std::string path) {
+	static std::map<std::string,Node*>
+			ParseFile(const std::string path) {
+
 		Parser parser(path);
 
-		Node *tree = parser.parseFile();
+		std::map<std::string,Node*>& targets
+				= parser.parseFile();
+
 		parser.finish();
 
-		return tree;
+		return targets;
 	}
 
 
