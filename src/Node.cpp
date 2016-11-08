@@ -31,6 +31,11 @@ const std::vector<Node*>& Node::getDeps() {
 	return mDeps;
 }
 
+const std::vector<Node*>& Node::getFathers()
+{
+	return mFathers;
+}
+
 const std::vector<std::string>& Node::getCmds() {
 	return mCmds;
 }
