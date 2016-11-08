@@ -27,7 +27,7 @@ public:
 
 	const std::vector<std::string>& getCmds();
 
-	void setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves );
+	void setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves, std::map<std::string, Node*>& targets);
 
 
 	std::map<std::string,Node*> *mTargets;

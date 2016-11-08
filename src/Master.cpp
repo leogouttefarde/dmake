@@ -16,29 +16,27 @@ Master::Master(CkArgMsg *m)
 
 	if (m->argc > 1) {
 		target = m->argv[1];
-	}
-	else {
-		target = "Makefile";
-	}
+		Node *tree = Parser::ParseFile( target );
 
-	Node *tree = Parser::ParseFile( target );
+		if ( tree != NULL ) {
+			tree->setDeps(mNodes, mTasks, *(tree->mTargets));
+		}
+		else {
+			CkExit();
+		}
 
-
-	if ( tree != NULL ) {
-		tree->setDeps(mNodes, mTasks);
-	}
-	else {
+		CkPrintf("Fin de la construction de l'arbre");
+		CkExit();
+		// printf("target = %s\n", target);
+		CkPrintf("chare array construction\n");
+		// chare array construction
+		slaveArray = CProxy_Slave::ckNew(nSlaves);
+		CkPrintf("slaveArray\n");
+	} else {
+		// target = "Makefile";
+		CkPrintf("Veuillez entrer le chemin du Makefile en argument\n");
 		CkExit();
 	}
-
-
-	// printf("target = %s\n", target);
-
-
-	CkPrintf("chare array construction\n");
-	// chare array construction
-	slaveArray = CProxy_Slave::ckNew(nSlaves);
-	CkPrintf("slaveArray\n");
 }
 
 void Master::requestJob(int iSlave)
