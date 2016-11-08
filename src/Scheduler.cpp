@@ -14,9 +14,9 @@ int Scheduler::getMaxDepth(Node* node)
 
 void Scheduler::notifyFinished(Node* node)
 {
-	for (int i = 0; i < node->vFathers.size(); i++)
+	for (int i = 0; i < node->mFathers.size(); i++)
 	{
-		Node* father = node->vFathers[i];
+		Node* father = node->mFathers[i];
 		father->nbUnfinishedSons--;
 		if (father->nbUnfinishedSons == 0)
 		{

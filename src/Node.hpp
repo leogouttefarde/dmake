@@ -25,6 +25,8 @@ public:
 
 	const std::vector<Node*>& getDeps();
 
+	const std::vector<Node*>& getFathers();
+
 	const std::vector<std::string>& getCmds();
 
 	void setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves, std::map<std::string, Node*>& targets);
@@ -32,14 +34,15 @@ public:
 
 	std::map<std::string,Node*> *mTargets;
 
-
+	int 						mNbUnfinishedSons;
+	bool	 					mNeedToBeBuilt;
 private:
-	std::string mName;
+	std::string 				mName;
 
-	std::vector<Node*> mDeps;
-	std::vector<std::string> mDepNames;
+	std::vector<Node*> 			mDeps;
+	std::vector<Node*> 			mFathers;
 
-	std::vector<std::string> mCmds;
-
+	std::vector<std::string> 	mDepNames;
+	std::vector<std::string> 	mCmds;
 };
 
