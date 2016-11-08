@@ -28,7 +28,7 @@ Master::Master(CkArgMsg *m)
 		tree->setDeps(mNodes, mTasks);
 	}
 	else {
-		CkExit(1);
+		CkExit();
 	}
 
 

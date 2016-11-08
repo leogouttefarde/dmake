@@ -4,7 +4,7 @@ CPATH=~/data/charm-6.7.1
 
 CHARMC=${CPATH}/bin/charmc $(OPTS)
 
-OBJS = Master.o Slave.o Parser.o
+OBJS = Master.o Slave.o Parser.o Node.o
 OBJSPARSER = Parseur.o
 all: Make
 
@@ -28,6 +28,9 @@ Slave.o: Slave.cpp Slave.hpp Make.decl.h
 
 Parser.o: Parser.cpp Parser.hpp
 	$(CHARMC) -g -c Parser.cpp
+
+Node.o: Node.cpp Node.hpp
+	$(CHARMC) -g -c Node.cpp
 
 Parseur.o: Parseur.cpp
 	g++ -o $@ -c $<
