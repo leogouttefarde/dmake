@@ -35,24 +35,25 @@ const std::vector<std::string>& Node::getCmds() {
 	return mCmds;
 }
 
-void Node::setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves ) {
+void Node::setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves, std::map<std::string, Node*>& targets ) {
 
-	std::map<std::string,Node*>& targets = *mTargets;
 
 	std::cout << "setDeps IN " << std::endl;
 
 	for (std::string name : mDepNames) {
-	std::cout << "for " << name << std::endl;
+		// Parcours des dépendances
+		std::cerr << "for " << name << std::endl;
 
 		Node *dep = targets[name];
 
 		if (dep != NULL) {
 
 			// Set child deps
-			dep->setDeps(nodes, leaves);
+			dep->setDeps(nodes, leaves, targets);
 
 			// Add new dep
 			mDeps.push_back(dep);
+
 
 		}
 		else {

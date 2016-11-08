@@ -4,19 +4,19 @@
 
 Parser::Parser(const std::string path) {
 
-		mFile.open(path, std::ifstream::in);
+	mFile.open(path, std::ifstream::in);
 
-		if (mFile.is_open()) {
-			std::cout << "Parser started";
-		}
-		else {
-			std::cout << "Error opening file";
-		}
+	if (mFile.is_open()) {
+		std::cout << "Parser started";
+	}
+	else {
+		std::cout << "Error opening file";
+	}
 
-		std::cout << std::endl;
+	std::cout << std::endl;
 }
 
-bool Parser::Parser::IsOk() {
+bool Parser::IsOk() {
 	return mFile.is_open();
 }
 
@@ -125,6 +125,7 @@ Node* Parser::parseFile() {
 		} while ( pTarget != NULL );
 	}
 
+	// 16:07 : Leo a dit que je peux changer
 	if ( first != NULL ) {
 		first->mTargets = new std::map<std::string,Node*>(mTargets);
 	}
