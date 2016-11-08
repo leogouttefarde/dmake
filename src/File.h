@@ -23,7 +23,8 @@ public:
 
   ~File() {
     if (mData != NULL) {
-      delete [] mData;
+      // delete [] mData;
+      // mData = NULL;
     }
   }
 
@@ -43,8 +44,10 @@ public:
 
   inline File &operator=(const File &infile) {
 
-    if (mData != NULL)
+    if (mData != NULL) {
       delete [] mData;
+      mData = NULL;
+    }
 
     mSize = infile.mSize;
     mPath = infile.mPath;
@@ -123,12 +126,12 @@ public:
     }
   }
 
+  std::string mPath;
 
 private:
   uint64_t mSize;
   uint8_t *mData;
 
-  std::string mPath;
 
 };
 

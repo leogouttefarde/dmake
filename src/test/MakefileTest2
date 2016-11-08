@@ -2,7 +2,7 @@
 
 
 matrix: dep1 dep2 dep3 dep4
-	printf lol0 >> lol
+	echo lol0 >> lol
 
 dep1:
 	echo lolDep > lol
@@ -10,7 +10,7 @@ dep1:
 dep2:
 	echo lolDep2 > lol2
 
-dep3:
+dep3: dep4
 	echo lolDep3 > lol3
 
 dep4:

@@ -25,6 +25,8 @@ Master::Master(CkArgMsg *m)
 			CkExit();
 		}
 
+		mTargets = *(tree->mTargets);
+
 		CkPrintf("Fin de la construction de l'arbre");
 		// CkExit();
 		// printf("target = %s\n", target);
@@ -39,6 +41,8 @@ Master::Master(CkArgMsg *m)
 	}
 }
 
+std::list<int> freeSlaves;
+
 void Master::requestJob(int iSlave)
 {
 	CkPrintf("Master::requestJob\n");
@@ -50,7 +54,11 @@ void Master::requestJob(int iSlave)
 		slaveArray[iSlave].run( Job( task ) );
 	}
 	else {
-		CkExit();
+		freeSlaves.push_back(iSlave);
+
+		if (freeSlaves.size() == nSlaves) {
+			CkExit();
+		}
 	}
 
 	CkPrintf("slaveArray[%d].run done\n", iSlave);
@@ -62,6 +70,15 @@ void Master::finishJob(File &target)
 
 	// Ecriture du target terminé
 	target.write();
+
+	Node *node = mTargets[target.mPath];
+
+	if (node != NULL) {
+		node->setDone();
+	}
+	else {
+		std::cout << "An unknown job just finished" << std::endl;
+	}
 }
 
 

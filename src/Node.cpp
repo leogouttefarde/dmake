@@ -5,6 +5,7 @@
 Node::Node(const std::string name) {
 	mName = name;
 	mTargets = NULL;
+	mIsDone = false;
 }
 
 std::string Node::getName() {
@@ -27,6 +28,30 @@ bool Node::isLeaf() {
 	return !mDeps.size() && !mDepNames.size();
 }
 
+bool Node::isDone() {
+	return mIsDone;
+}
+
+bool Node::setDone() {
+	mIsDone = true;
+}
+
+bool Node::isReady() {
+
+	if ( isLeaf() ) {
+		return true;
+	}
+
+	for (Node *node : mDeps) {
+
+		if ( !node->isDone() ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 const std::vector<Node*>& Node::getDeps() {
 	return mDeps;
 }
@@ -40,7 +65,7 @@ const std::vector<std::string>& Node::getCmds() {
 	return mCmds;
 }
 
-void Node::setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves, std::map<std::string, Node*>& targets ) {
+void Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves, std::map<std::string, Node*>& targets ) {
 
 
 	std::cout << "setDeps IN " << std::endl;
@@ -70,12 +95,12 @@ void Node::setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves, std::ma
 	if ( isLeaf() ) {
 
 		// Add leaves
-		leaves.push(this);
+		leaves.push_back(this);
 	}
 	else {
 
 		// Add highest deps at the end
-		nodes.push(this);
+		nodes.push_back(this);
 	}
 }
 

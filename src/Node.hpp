@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <string>
-#include <queue>
+#include <vector>
+#include <list>
 #include <map>
 
 
@@ -23,13 +24,19 @@ public:
 
 	bool isLeaf();
 
+	bool isReady();
+
+	bool isDone();
+
+	bool setDone();
+
 	const std::vector<Node*>& getDeps();
 
 	const std::vector<Node*>& getFathers();
 
 	const std::vector<std::string>& getCmds();
 
-	void setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves, std::map<std::string, Node*>& targets);
+	void setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves, std::map<std::string, Node*>& targets);
 
 
 	std::map<std::string,Node*> *mTargets;
@@ -44,5 +51,7 @@ private:
 
 	std::vector<std::string> 	mDepNames;
 	std::vector<std::string> 	mCmds;
+
+	bool	 					mIsDone;
 };
 
