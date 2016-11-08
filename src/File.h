@@ -85,7 +85,7 @@ public:
     }
   }
 
-  void write( int index ) {
+  void write(/* int index*/ ) {
 
     if (!mData || !mSize)
       return;
@@ -102,6 +102,7 @@ public:
       fwrite(mData, 1, mSize, file);
       fclose(file);
     }
+
   }
 
   uint64_t size() {

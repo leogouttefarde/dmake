@@ -26,7 +26,7 @@ Master::Master(CkArgMsg *m)
 		}
 
 		CkPrintf("Fin de la construction de l'arbre");
-		CkExit();
+		// CkExit();
 		// printf("target = %s\n", target);
 		CkPrintf("chare array construction\n");
 		// chare array construction
@@ -42,8 +42,6 @@ Master::Master(CkArgMsg *m)
 void Master::requestJob(int iSlave)
 {
 	CkPrintf("Master::requestJob\n");
-
-
 	CkPrintf("slaveArray[%d].run\n", iSlave);
 
 	Node *task = nextTask();
