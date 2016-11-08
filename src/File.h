@@ -8,9 +8,12 @@ class File {
 
 public:
 
-  File(std::string path) : mPath(path) {
+  File(std::string path, bool preload = true) : mPath(path) {
     mData = NULL;
     mSize = 0;
+
+    if (preload)
+      read();
   }
 
   File() {
@@ -25,6 +28,7 @@ public:
   }
 
   void pup(PUP::er &p) {
+
     // remember to pup your superclass if there is one
     p|mPath;
     p|mSize;
@@ -32,7 +36,9 @@ public:
     if (p.isUnpacking())
       mData = new uint8_t[mSize];
 
-    PUParray(p, mData, mSize);
+    if (mData != NULL)
+      PUParray(p, mData, mSize);
+
   }
 
   inline File &operator=(const File &infile) {
@@ -54,13 +60,40 @@ public:
 
   void read() {
     // read file data from path
-  }
 
-  void write( int index ) {
     // force write file into path (do not rely on NFS)
     std::string path(mPath);
 
-    path += std::to_string(index) + ".txt";
+    // path += std::to_string(index) + ".txt";
+
+    FILE *file = fopen( path.c_str(), "rb" );
+
+    if ( file != NULL ) {
+      fseek(file, 0, SEEK_END);
+      mSize = ftell(file);
+      fseek(file, 0, SEEK_SET);
+
+      mData = new uint8_t[mSize];
+
+      if (mData) {
+
+        // assert( mSize == fwrite(mData, 1, mSize, file) );
+        fread(mData, 1, mSize, file);
+      }
+
+      fclose(file);
+    }
+  }
+
+  void write( int index ) {
+
+    if (!mData || !mSize)
+      return;
+
+    // force write file into path (do not rely on NFS)
+    std::string path(mPath);
+
+    // path += std::to_string(index) + ".txt";
 
     FILE *file = fopen( path.c_str(), "wb" );
 

@@ -15,7 +15,7 @@ void Slave::run(Job &job)
 	CkPrintf("Slave::run\n");
 	File file;
 	//file = job.gen()
-	CkPrintf("job.data = %d\n", job.data);
+	// CkPrintf("job.data = %d\n", job.data);
 
 	masterProxy.finishJob(file);
 	masterProxy.requestJob(thisIndex);

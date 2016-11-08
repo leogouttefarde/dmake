@@ -1,68 +1,39 @@
 
+#pragma once
+
 #include <boost/algorithm/string.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <queue>
+#include <map>
 
 
 class Node {
 
 public:
 
-	Node(const std::string name) {
-		mName = name;
-	}
+	Node(const std::string name);
 
-	std::string getName() {
-		return mName;
-	}
+	std::string getName();
 
-	void addDepName(const std::string name) {
-		mDepNames.push_back(name);
-	}
+	void addDepName(const std::string name);
 
-	void addCmd(const std::string cmd) {
-		mCmds.push_back(cmd);
-	}
+	void addCmd(const std::string cmd);
 
-	const std::vector<std::string>& getDepNames() {
-		return mDepNames;
-	}
+	const std::vector<std::string>& getDepNames();
 
-	const std::vector<Node*>& getDeps() {
-		return mDeps;
-	}
+	bool isLeaf();
 
-	const std::vector<std::string>& getCmds() {
-		return mCmds;
-	}
+	const std::vector<Node*>& getDeps();
 
-	void setDeps(std::map<std::string,Node*>& mTargets) {
+	const std::vector<std::string>& getCmds();
 
-		std::cout << "setDeps IN " << std::endl;
+	void setDeps( std::queue<Node*>& nodes, std::queue<Node*>& leaves );
 
-		for (std::string name : mDepNames) {
-		std::cout << "for " << name << std::endl;
 
-			Node *dep = mTargets[name];
-
-			if (dep != NULL) {
-
-				// Set child deps
-				dep->setDeps(mTargets);
-
-				// Add new dep
-				mDeps.push_back(dep);
-
-			}
-			else {
-				std::cout << "FATAL ERROR : missing dependency "
-					<< name << std::endl;
-			}
-		}
-
-	}
+	std::map<std::string,Node*> *mTargets;
 
 
 private:
@@ -81,139 +52,23 @@ class Parser {
 
 public:
 
-	Parser(const std::string path) {
+	Parser(const std::string path);
 
-		mFile.open(path, std::ifstream::in);
+	bool IsOk();
 
-		if (mFile.is_open()) {
-			std::cout << "Parser started";
-		}
-		else {
-			std::cout << "Error opening file";
-		}
+	void finish();
 
-		std::cout << std::endl;
-	}
+	bool parseRuleName(std::string& oName);
 
-	bool IsOk() {
-		return mFile.is_open();
-	}
+	void parseDependencies(Node *pTarget);
 
-	void finish() {
-		mFile.close();
-	}
+	void parseCommands(Node *pTarget);
 
-	bool parseRuleName(std::string& oName) {
+	Node* parseTarget();
 
-		while ( std::getline(mFile, mNext) ) {
+	Node* parseFile();
 
-			size_t pos = mNext.find(':');
-
-			if ( pos != std::string::npos ) {
-				oName = mNext.substr(0, pos);
-				boost::algorithm::trim(oName);
-
-				// Remove rule name from buffer
-				mNext = mNext.substr(pos + 1);
-
-				return true;
-			}
-			// else
-			// 	std::cout << "Wild line" << std::endl;
-
-		}
-
-		return false;
-	}
-
-	void parseDependencies(Node *pTarget) {
-
-		if (pTarget == NULL) {
-			return;
-		}
-
-		std::stringstream ss(mNext);
-		std::string dep;
-
-		while ( std::getline(ss, dep, ' ') ) {
-			boost::algorithm::trim(dep);
-
-			if (dep.size() > 0) {
-				pTarget->addDepName(dep);
-				std::cout << "Dependency added : '" << dep << "'" << std::endl;
-			}
-		}
-	}
-
-	void parseCommands(Node *pTarget) {
-
-		if (pTarget == NULL) {
-			return;
-		}
-
-		while ( std::getline(mFile, mNext) ) {
-			boost::algorithm::trim(mNext);
-
-			if (mNext.size() > 0) {
-				pTarget->addCmd(mNext);
-				std::cout << "Command added : '" << mNext << "'" << std::endl;
-			}
-			else {
-				break;
-			}
-		}
-	}
-
-	Node* parseTarget() {
-
-		std::string name;
-
-		if ( !parseRuleName(name) ) {
-			return NULL;
-		}
-
-		std::cout << "Target name : '" << name << "'" << std::endl;
-
-		Node *pTarget = new Node(name);
-
-		parseDependencies(pTarget);
-		parseCommands(pTarget);
-
-		std::cout << std::endl;
-
-		return pTarget;
-	}
-
-	std::map<std::string,Node*>& parseFile() {
-
-		if (IsOk()) {
-			Node *pTarget = NULL;
-
-			do {
-				pTarget = parseTarget();
-
-				if ( pTarget != NULL ) {
-					mTargets[ pTarget->getName() ] = pTarget;
-				}
-
-			} while ( pTarget != NULL );
-		}
-
-		return mTargets;
-	}
-
-	static std::map<std::string,Node*>
-			ParseFile(const std::string path) {
-
-		Parser parser(path);
-
-		std::map<std::string,Node*>& targets
-				= parser.parseFile();
-
-		parser.finish();
-
-		return targets;
-	}
+	static Node* ParseFile(const std::string path);
 
 
 private:

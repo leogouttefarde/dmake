@@ -1,6 +1,5 @@
 
 #include "Master.hpp"
-#include "Parser.hpp"
 
 /*readonly*/ CProxy_Master masterProxy;
 /*readonly*/ CProxy_Slave slaveArray;
@@ -22,19 +21,16 @@ Master::Master(CkArgMsg *m)
 		target = "Makefile";
 	}
 
-	std::map<std::string,Node*> map = Parser::ParseFile( target );
+	Node *tree = Parser::ParseFile( target );
 
-	Node *all = map["all"];
 
-	if ( all != NULL ) {
-		all->addDepName("hh");
-		all->setDeps(map);
+	if ( tree != NULL ) {
+		tree->setDeps(mNodes, mTasks);
 	}
 	else {
-		std::cout << "NO all ??" << std::endl;
+		CkExit(1);
 	}
 
-	CkExit();
 
 	// printf("target = %s\n", target);
 
@@ -45,25 +41,23 @@ Master::Master(CkArgMsg *m)
 	CkPrintf("slaveArray\n");
 }
 
-int n = 0;
-
 void Master::requestJob(int iSlave)
 {
 	CkPrintf("Master::requestJob\n");
-	// if (jobs.size() > 1)
 
-	Job job;
-	job.data = 7;
-	//job = nextJob();
 
-	if (n++ < nSlaves) {
-		CkPrintf("slaveArray[%d].run\n", iSlave);
-		slaveArray[iSlave].run(job);
-		CkPrintf("slaveArray[%d].run done\n", iSlave);
+	CkPrintf("slaveArray[%d].run\n", iSlave);
+
+	Node *task = nextTask();
+
+	if (task != NULL) {
+		slaveArray[iSlave].run( Job( task ) );
 	}
 	else {
 		CkExit();
 	}
+
+	CkPrintf("slaveArray[%d].run done\n", iSlave);
 }
 
 void Master::finishJob(File &target)

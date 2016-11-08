@@ -1,32 +1,43 @@
 
 #pragma once
-#include <string>
-#include <pup_stl.h>
+#include "File.h"
+#include "Parser.hpp"
 
 
 class Job {
 
 public:
-	int data;
-	int *vals;
+  std::string mTarget;
+	std::vector<File> mDeps;
 
   Job() {
-  	data = 0;
-  	vals = NULL;
+  }
+
+  Job(Node *target) {
+
+    mTarget = target->getName();
+
+    // Read all deps
+    for (Node *dep : target->getDeps()) {
+
+      mDeps.push_back( File( dep->getName() ) );
+    }
+
   }
 
   ~Job() {
   }
 
   void pup(PUP::er &p) {
-  	p|data;
+    p|mTarget;
+  	p|mDeps;
 
-    if (p.isUnpacking())
-      vals = new int[data];
+   //  if (p.isUnpacking())
+   //    vals = new int[data];
 
-  	// verif manuelle car data pas forcément 0 pr l'instant
-    if (vals)
-    PUParray(p, vals, data);
+  	// // verif manuelle car data pas forcément 0 pr l'instant
+   //  if (vals)
+   //  PUParray(p, vals, data);
   }
 
 
