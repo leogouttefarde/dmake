@@ -21,7 +21,7 @@ void Slave::run(Job &job)
 
 	for (std::string cmd : job.mCmds) {
 		system(cmd.c_str());
-		std::cout << "executed '" << cmd << std::endl;
+		std::cout << "Executed cmd '" << cmd << "'" << std::endl;
 	}
 
 	File target(job.mTarget);

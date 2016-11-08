@@ -60,6 +60,8 @@ void Master::finishJob(File &target)
 {
 	CkPrintf("finishJob\n");
 
+	// Ecriture du target terminé
+	target.write();
 }
 
 
