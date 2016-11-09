@@ -34,6 +34,7 @@ public:
 
 	std::map<std::string,Node*> *mTargets;
 
+	int 						mDepth;
 	int 						mNbUnfinishedSons;
 	bool	 					mNeedToBeBuilt;
 private:
