@@ -22,7 +22,8 @@ public:
     // Read all deps
     for (Node *dep : target->getDeps()) {
 
-      mDeps.push_back( File( dep->getName() ) );
+      File file( dep->getName() );
+      mDeps.push_back( file );
     }
 
   }
@@ -41,13 +42,6 @@ public:
     p|mTarget;
   	p|mDeps;
     p|mCmds;
-
-   //  if (p.isUnpacking())
-   //    vals = new int[data];
-
-  	// // verif manuelle car data pas forcément 0 pr l'instant
-   //  if (vals)
-   //  PUParray(p, vals, data);
   }
 
 

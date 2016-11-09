@@ -51,7 +51,8 @@ void Master::requestJob(int iSlave)
 	Node *task = nextTask();
 
 	if (task != NULL) {
-		slaveArray[iSlave].run( Job( task ) );
+		Job job( task );
+		slaveArray[iSlave].run( job );
 	}
 	else {
 		freeSlaves.push_back(iSlave);
