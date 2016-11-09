@@ -86,5 +86,36 @@ void Master::finishJob(File &target)
 	}
 }
 
+Node* Master::nextTask() {
+	Node *jTask = NULL;
+
+	if ( mTasks.empty() ) {
+		std::list<Node*>::iterator it;
+
+		// Find ready task(s) from nodes
+		for (it=mNodes.begin(); it!=mNodes.end(); ) {
+			Node *node = *it;
+
+			if ( node->isReady() ) {
+				mTasks.push_back(node);
+				it = mNodes.erase(it);
+			}
+
+			// Only increment when current
+			// iterator is not consumed
+			else {
+				++it;
+			}
+		}
+	}
+
+	if ( !mTasks.empty() ) {
+		jTask = mTasks.front();
+		mTasks.pop_front();
+	}
+
+	return jTask;
+}
+
 
 #include "Make.def.h"

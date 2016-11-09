@@ -14,30 +14,9 @@ public:
 	void requestJob(int iSlave);
 	void finishJob(File &target);
 
-	Node* nextTask() {
-		Node *jTask = NULL;
-
-		if ( mTasks.empty() ) {
-			std::list<Node*>::iterator it;
-
-			// Find ready task(s) from nodes
-			for (it=mNodes.begin(); it!=mNodes.end(); ++it) {
-				Node *node = *it;
-
-				if ( node->isReady() ) {
-					mTasks.push_back(node);
-					it = mNodes.erase(it);
-				}
-			}
-		}
-
-		if ( !mTasks.empty() ) {
-			jTask = mTasks.front();
-			mTasks.pop_front();
-		}
-
-		return jTask;
-	}
+	// Returns the next task to be distributed,
+	// or NULL when none currently available
+	Node* nextTask();
 
 
 private:

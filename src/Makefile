@@ -34,3 +34,5 @@ Node.o: Node.cpp Node.hpp
 
 Parseur.o: Parseur.cpp
 	g++ -o $@ -c $<
+
+#todo : optim Makefile
