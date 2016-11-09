@@ -12,7 +12,7 @@ Slave::Slave()
 
 void Slave::run(Job &job)
 {
-	CkPrintf("Slave::run\n");
+	CkPrintf("Slave #%d : run %s\n", CkMyPe(), job.mTarget.c_str());
 
 	//file = job.gen()
 	job.writeDeps();
@@ -21,7 +21,8 @@ void Slave::run(Job &job)
 
 	for (std::string cmd : job.mCmds) {
 		system(cmd.c_str());
-		std::cout << "Executed cmd '" << cmd << "'" << std::endl;
+		std::cout << "Processor #" << CkMyPe()
+			<< " executed '" << cmd << "'" << std::endl;
 	}
 
 	File target(job.mTarget);

@@ -7,12 +7,16 @@
 
 Master::Master(CkArgMsg *m)
 {
-	CkPrintf("Master::Master\n");
+	CkPrintf("Master creation with #%d processor(s)\n", CkNumPes());
 	// init all
 	const char *target = NULL;
 
 	masterProxy = thisProxy;
-	nSlaves = 3;
+	nSlaves = CkNumPes() - 1;
+
+	if (nSlaves == 0) {
+		nSlaves = 1;
+	}
 
 	if (m->argc > 1) {
 		target = m->argv[1];
@@ -27,13 +31,13 @@ Master::Master(CkArgMsg *m)
 
 		mTargets = *(tree->mTargets);
 
-		CkPrintf("Fin de la construction de l'arbre");
+		CkPrintf("Fin de la construction de l'arbre\n");
 		// CkExit();
 		// printf("target = %s\n", target);
 		CkPrintf("chare array construction\n");
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
-		CkPrintf("slaveArray\n");
+		CkPrintf("%d slaves created\n", nSlaves);
 	} else {
 		// target = "Makefile";
 		CkPrintf("Veuillez entrer le chemin du Makefile en argument\n");
