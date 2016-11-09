@@ -32,7 +32,7 @@ bool Parser::parseRuleName(std::string& oName) {
 
 		if ( pos != std::string::npos ) {
 			oName = mNext.substr(0, pos);
-			boost::algorithm::trim(oName);
+			oName = trim(oName);
 
 			// Remove rule name from buffer
 			mNext = mNext.substr(pos + 1);
@@ -57,7 +57,7 @@ void Parser::parseDependencies(Node *pTarget) {
 	std::string dep;
 
 	while ( std::getline(ss, dep, ' ') ) {
-		boost::algorithm::trim(dep);
+		dep = trim(dep);
 
 		if (dep.size() > 0) {
 			pTarget->addDepName(dep);
@@ -73,7 +73,7 @@ void Parser::parseCommands(Node *pTarget) {
 	}
 
 	while ( std::getline(mFile, mNext) ) {
-		boost::algorithm::trim(mNext);
+		mNext = trim(mNext);
 
 		if (mNext.size() > 0) {
 			pTarget->addCmd(mNext);
