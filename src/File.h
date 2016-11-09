@@ -1,5 +1,6 @@
 
 #pragma once
+#include <iostream>
 #include <string>
 #include <pup_stl.h>
 
@@ -8,126 +9,92 @@ class File {
 
 public:
 
-  File(std::string path, bool preload = true) : mPath(path) {
-    mData = NULL;
-    mSize = 0;
+	File(std::string path, bool preload = true) : mPath(path) {
 
-    if (preload)
-      read();
-  }
+		if (preload)
+			read();
 
-  File() {
-    mData = NULL;
-    mSize = 0;
-  }
+	}
 
-  ~File() {
-    if (mData != NULL) {
-      delete [] mData;
-    }
-  }
+	File() {
+	}
 
-  void pup(PUP::er &p) {
+	~File() {
+	}
 
-    // remember to pup your superclass if there is one
-    p|mPath;
-    p|mSize;
+	void pup(PUP::er &p) {
+		p|mPath;
+		p|mData;
+	}
 
-    if (p.isUnpacking())
-      mData = new uint8_t[mSize];
+	inline File &operator=(const File &infile) {
+		mPath = infile.mPath;
+		mData = infile.mData;
 
-    if (mData != NULL)
-      PUParray(p, mData, mSize);
+		return *this;
+	}
 
-  }
+	// read file data from path
+	void read() {
 
-  inline File &operator=(const File &infile) {
+		// force write file into path (do not rely on NFS)
+		std::string path(mPath);
 
-    if (mData != NULL)
-      delete [] mData;
+		FILE *file = fopen( path.c_str(), "rb" );
 
-    mSize = infile.mSize;
-    mPath = infile.mPath;
+		if ( file != NULL ) {
+			fseek(file, 0, SEEK_END);
+			unsigned long size = ftell(file);
+			fseek(file, 0, SEEK_SET);
 
-    if (mSize > 0)
-      mData = new uint8_t[mSize];
+			mData.resize( size );
 
-    for (uint64_t i = 0; i < mSize; ++i)
-      mData[i] = infile.mData[i];
+			// assert( mSize == fwrite(mData, 1, mSize, file) );
+			fread((void*)mData.data(), 1, size, file);
 
-    return *this;
-  }
+			fclose(file);
+		}
+	}
 
-  void read() {
-    // read file data from path
+	void write() {
 
-    // force write file into path (do not rely on NFS)
-    std::string path(mPath);
+		if (!mData.size())
+			return;
 
-    // path += std::to_string(index) + ".txt";
+		// force write file into path (do not rely on NFS)
+		std::string path(mPath);
 
-    FILE *file = fopen( path.c_str(), "rb" );
+		FILE *file = fopen( path.c_str(), "wb" );
 
-    if ( file != NULL ) {
-      fseek(file, 0, SEEK_END);
-      mSize = ftell(file);
-      fseek(file, 0, SEEK_SET);
+		if ( file != NULL ) {
+			// assert( mSize == fwrite(mData, 1, mSize, file) );
+			fwrite(mData.data(), 1, mData.size(), file);
+			fclose(file);
+		}
 
-      mData = new uint8_t[mSize];
+	}
 
-      if (mData) {
+	uint64_t size() {
+		return mData.size();
+	}
 
-        // assert( mSize == fwrite(mData, 1, mSize, file) );
-        fread(mData, 1, mSize, file);
-      }
+	void setData( uint8_t *data, uint64_t size ) {
 
-      fclose(file);
-    }
-  }
+		if (data == NULL || size == 0) {
+			return;
+		}
 
-  void write( int index ) {
+		mData.resize(size);
 
-    if (!mData || !mSize)
-      return;
+		for (uint64_t i = 0; i < size; i++) {
+			mData[i] = data[i];
+		}
+	}
 
-    // force write file into path (do not rely on NFS)
-    std::string path(mPath);
-
-    // path += std::to_string(index) + ".txt";
-
-    FILE *file = fopen( path.c_str(), "wb" );
-
-    if ( file != NULL ) {
-      // assert( mSize == fwrite(mData, 1, mSize, file) );
-      fwrite(mData, 1, mSize, file);
-      fclose(file);
-    }
-  }
-
-  uint64_t size() {
-    return mSize;
-  }
-
-  void setData( uint8_t *data, uint64_t size ) {
-
-    if (data == NULL || size == 0) {
-      return;
-    }
-
-    mData = new uint8_t[size];
-    mSize = size;
-
-    for (uint64_t i = 0; i < mSize; i++) {
-      mData[i] = data[i];
-    }
-  }
-
+	std::string mPath;
 
 private:
-  uint64_t mSize;
-  uint8_t *mData;
-
-  std::string mPath;
+	std::vector<uint8_t> mData;
 
 };
 

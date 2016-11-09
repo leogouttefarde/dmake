@@ -4,6 +4,7 @@
 #include "Slave.hpp"
 #include "Parser.hpp"
 
+
 class Master : public CBase_Master {
 
 public:
@@ -17,12 +18,22 @@ public:
 		Node *jTask = NULL;
 
 		if ( mTasks.empty() ) {
-			
+			std::list<Node*>::iterator it;
+
 			// Find ready task(s) from nodes
+			for (it=mNodes.begin(); it!=mNodes.end(); ++it) {
+				Node *node = *it;
+
+				if ( node->isReady() ) {
+					mTasks.push_back(node);
+					it = mNodes.erase(it);
+				}
+			}
 		}
-		else {
+
+		if ( !mTasks.empty() ) {
 			jTask = mTasks.front();
-			mTasks.pop();
+			mTasks.pop_front();
 		}
 
 		return jTask;
@@ -32,8 +43,10 @@ public:
 private:
 
 	// Put leaves as first tasks as they can be built as is
-	std::queue<Node*> mTasks;
-	std::queue<Node*> mNodes;
+	std::list<Node*> mTasks;
+	std::list<Node*> mNodes;
+
+	std::map<std::string,Node*> mTargets;
 
 };
 

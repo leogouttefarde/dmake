@@ -7,12 +7,16 @@
 
 Master::Master(CkArgMsg *m)
 {
-	CkPrintf("Master::Master\n");
+	CkPrintf("Master creation with #%d processor(s)\n", CkNumPes());
 	// init all
 	const char *target = NULL;
 
 	masterProxy = thisProxy;
-	nSlaves = 3;
+	nSlaves = CkNumPes() - 1;
+
+	if (nSlaves == 0) {
+		nSlaves = 1;
+	}
 
 	if (m->argc > 1) {
 		target = m->argv[1];
@@ -25,13 +29,15 @@ Master::Master(CkArgMsg *m)
 			CkExit();
 		}
 
-		CkPrintf("Fin de la construction de l'arbre");
-		CkExit();
+		mTargets = *(tree->mTargets);
+
+		CkPrintf("Fin de la construction de l'arbre\n");
+		// CkExit();
 		// printf("target = %s\n", target);
 		CkPrintf("chare array construction\n");
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
-		CkPrintf("slaveArray\n");
+		CkPrintf("%d slaves created\n", nSlaves);
 	} else {
 		// target = "Makefile";
 		CkPrintf("Veuillez entrer le chemin du Makefile en argument\n");
@@ -39,20 +45,25 @@ Master::Master(CkArgMsg *m)
 	}
 }
 
+std::list<int> freeSlaves;
+
 void Master::requestJob(int iSlave)
 {
 	CkPrintf("Master::requestJob\n");
-
-
 	CkPrintf("slaveArray[%d].run\n", iSlave);
 
 	Node *task = nextTask();
 
 	if (task != NULL) {
-		slaveArray[iSlave].run( Job( task ) );
+		Job job( task );
+		slaveArray[iSlave].run( job );
 	}
 	else {
-		CkExit();
+		freeSlaves.push_back(iSlave);
+
+		if (freeSlaves.size() == nSlaves) {
+			CkExit();
+		}
 	}
 
 	CkPrintf("slaveArray[%d].run done\n", iSlave);
@@ -62,6 +73,17 @@ void Master::finishJob(File &target)
 {
 	CkPrintf("finishJob\n");
 
+	// Ecriture du target terminé
+	target.write();
+
+	Node *node = mTargets[target.mPath];
+
+	if (node != NULL) {
+		node->setDone();
+	}
+	else {
+		std::cout << "An unknown job just finished" << std::endl;
+	}
 }
 
 
