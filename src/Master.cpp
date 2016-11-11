@@ -111,8 +111,15 @@ Node* Master::nextTask() {
 	}
 
 	if ( !mTasks.empty() ) {
+
 		jTask = mTasks.front();
 		mTasks.pop_front();
+
+		// Run last job directly from master
+		if ( jTask != NULL && mNodes.empty() && mTasks.empty() ) {
+			Slave::ExecuteCmds( jTask->getCmds() );
+			jTask = NULL;
+		}
 	}
 
 	return jTask;

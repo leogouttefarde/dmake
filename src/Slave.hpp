@@ -12,6 +12,8 @@ public:
 
 	void run(Job &job);
 
+	static void ExecuteCmds(const std::vector<std::string>& cmds);
+
 private:
 
 };
