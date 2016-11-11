@@ -11,3 +11,16 @@ random_matrix.pl taille_x taille_y > a
 random_matrix.pl taille_y taille_z > b
 
 make
+
+
+
+exemple :
+
+./generate_makefile.pl 7 > Makefile
+
+./random_matrix.pl 7 7 > a
+./random_matrix.pl 7 7 > b
+
+PATH=.:PATH
+
+

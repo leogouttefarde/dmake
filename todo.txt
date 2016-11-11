@@ -1,0 +1,7 @@
+
+
+- bugfix : les dependances désignant de simples fichiers existants doivent être supportées
+(cf blender_2.59 : FATAL ERROR : missing dependency cubesphere.blend)
+
+- ne générer que les dépendances qui doivent l'être (vérifier les dates de fichiers)
+
