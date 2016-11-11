@@ -20,9 +20,9 @@ public:
 
 	void finish();
 
-	bool parseRuleName(std::string& oName, std::string& nextLine);
+	bool parseRuleName(std::string& oName);
 
-	void parseDependencies(Node *pTarget, std::string nextLine);
+	void parseDependencies(Node *pTarget);
 
 	void parseCommands(Node *pTarget);
 
@@ -35,6 +35,8 @@ public:
 
 private:
 	std::ifstream mFile;
+	std::string mNext;
+
 	std::map<std::string,Node*> mTargets;
 
 };

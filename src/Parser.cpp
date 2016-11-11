@@ -24,18 +24,18 @@ void Parser::finish() {
 	mFile.close();
 }
 
-bool Parser::parseRuleName(std::string& oName, std::string& nextLine) {
+bool Parser::parseRuleName(std::string& oName) {
 
-	while ( std::getline(mFile, nextLine) ) {
+	while ( std::getline(mFile, mNext) ) {
 
-		size_t pos = nextLine.find(':');
+		size_t pos = mNext.find(':');
 
 		if ( pos != std::string::npos ) {
-			oName = nextLine.substr(0, pos);
+			oName = mNext.substr(0, pos);
 			oName = trim(oName);
 
 			// Remove rule name from buffer
-			nextLine = nextLine.substr(pos + 1);
+			mNext = mNext.substr(pos + 1);
 
 			return true;
 		}
@@ -47,9 +47,13 @@ bool Parser::parseRuleName(std::string& oName, std::string& nextLine) {
 	return false;
 }
 
-void Parser::parseDependencies(Node *pTarget, std::string nextLine) {
+void Parser::parseDependencies(Node *pTarget) {
 
-	std::stringstream ss(nextLine);
+	if (pTarget == NULL) {
+		return;
+	}
+
+	std::stringstream ss(mNext);
 	std::string dep;
 
 	while ( std::getline(ss, dep, ' ') ) {
@@ -64,14 +68,16 @@ void Parser::parseDependencies(Node *pTarget, std::string nextLine) {
 
 void Parser::parseCommands(Node *pTarget) {
 
-	std::string commands;
+	if (pTarget == NULL) {
+		return;
+	}
 
-	while ( std::getline(mFile, commands) ) {
-		commands = trim(commands);
+	while ( std::getline(mFile, mNext) ) {
+		mNext = trim(mNext);
 
-		if (commands.size() > 0) {
-			pTarget->addCmd(commands);
-			std::cout << "Command added : '" << commands << "'" << std::endl;
+		if (mNext.size() > 0) {
+			pTarget->addCmd(mNext);
+			std::cout << "Command added : '" << mNext << "'" << std::endl;
 		}
 		else {
 			break;
@@ -82,20 +88,16 @@ void Parser::parseCommands(Node *pTarget) {
 Node* Parser::parseTarget() {
 
 	std::string name;
-	std::string nextLine; // will contain the dependencies after parsing the name of the rule
 
-	if ( !parseRuleName(name, nextLine) ) {
+	if ( !parseRuleName(name) ) {
 		return NULL;
 	}
 
-	std::cout << "Target name : '" << nextLine << "'" << std::endl;
+	std::cout << "Target name : '" << name << "'" << std::endl;
 
 	Node *pTarget = new Node(name);
-	if (pTarget == NULL) {
-		return NULL;
-	}
 
-	parseDependencies(pTarget, nextLine);
+	parseDependencies(pTarget);
 	parseCommands(pTarget);
 
 	std::cout << std::endl;
