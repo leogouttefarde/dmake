@@ -20,6 +20,10 @@ public:
 
 	void finish();
 
+	bool nextLine();
+
+	void consumeLine();
+
 	bool parseRuleName(std::string& oName);
 
 	void parseDependencies(Node *pTarget);
@@ -30,7 +34,9 @@ public:
 
 	Node* parseFile();
 
-	static Node* ParseFile(const std::string path);
+	static Node* ParseFile(const std::string path, std::map<std::string,Node*>& oTargets);
+
+	std::map<std::string,Node*>& getTargets();
 
 
 private:

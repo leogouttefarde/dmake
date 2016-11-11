@@ -20,27 +20,28 @@ Master::Master(CkArgMsg *m)
 
 	if (m->argc > 1) {
 		target = m->argv[1];
-		Node *tree = Parser::ParseFile( target );
+		Node *tree = Parser::ParseFile( target, mTargets );
+		bool success = false;
 
 		if ( tree != NULL ) {
-			tree->setDeps(mNodes, mTasks, *(tree->mTargets));
+			success = tree->setDeps(mNodes, mTasks, mTargets);
 		}
-		else {
+
+		if ( !success ) {
 			CkExit();
 		}
 
-		mTargets = *(tree->mTargets);
-
 		CkPrintf("Fin de la construction de l'arbre\n");
-		// CkExit();
 		// printf("target = %s\n", target);
-		CkPrintf("chare array construction\n");
+
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
+
 		CkPrintf("%d slaves created\n", nSlaves);
+
 	} else {
 		// target = "Makefile";
-		CkPrintf("Veuillez entrer le chemin du Makefile en argument\n");
+		CkPrintf("Usage : %s <MakefilePath>\n", m->argv[0]);
 		CkExit();
 	}
 }
