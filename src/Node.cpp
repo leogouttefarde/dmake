@@ -1,10 +1,10 @@
 
 #include "Node.hpp"
+#include <fstream>
 
-
-Node::Node(const std::string name) {
+Node::Node(const std::string name, bool isDone) {
 	mName = name;
-	mIsDone = false;
+	mIsDone = isDone;
 }
 
 std::string Node::getName() {
@@ -78,6 +78,13 @@ bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
 
 		Node *dep = targets[name];
 
+		// If dependency not found but already existing,
+		// create the node and set it to "built" state
+		if ( dep == NULL && std::ifstream( name ).good() ) {
+			dep = new Node(name, true);
+			targets[name] = dep;
+		}
+
 		if (dep != NULL) {
 
 			// Set child deps
@@ -85,7 +92,6 @@ bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
 
 			// Add new dep
 			mDeps.push_back(dep);
-
 
 		}
 		else {

@@ -12,7 +12,7 @@ class Node {
 
 public:
 
-	Node(const std::string name);
+	Node(const std::string name, bool isDone = false);
 
 	std::string getName();
 
