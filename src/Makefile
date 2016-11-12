@@ -12,7 +12,7 @@ all: Make
 Make: $(OBJS)
 	$(CHARMC) -language charm++ -g -o $@ $(OBJS)
 
-Make.decl.h: Make.ci
+Make.decl.h: Make.ci Job.h File.h
 	$(CHARMC) Make.ci
 
 clean:

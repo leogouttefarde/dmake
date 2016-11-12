@@ -1,5 +1,7 @@
 
 
 - ne générer que les dépendances qui doivent l'être (vérifier les dates de fichiers)
-- finir d'optim le Makefile du projet
+- rapport
+- tests
+- slides
 
