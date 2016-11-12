@@ -155,15 +155,15 @@ Node* Parser::parseFile() {
 		} while ( pTarget != NULL );
 	}
 
-	// TODO : finaliser l'arbre içi
 	// if ( first != NULL ) {
-		
+	// Idéalement : finaliser l'arbre içi
 	// }
 
 	return first;
 }
 
-Node* Parser::ParseFile( const std::string path, std::map<std::string,Node*>& oTargets ) {
+Node* Parser::ParseFile( const std::string path,
+		std::map<std::string,Node*>& oTargets ) {
 
 	Parser parser(path);
 

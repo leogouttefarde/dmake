@@ -15,7 +15,7 @@ Master::Master(CkArgMsg *m)
 	masterProxy = thisProxy;
 	nSlaves = CkNumPes() - 1;
 
-	if (nSlaves == 0) {
+	if (nSlaves < 1) {
 		nSlaves = 1;
 	}
 
