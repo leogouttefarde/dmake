@@ -1,5 +1,6 @@
 
 #include "Master.hpp"
+#include <chrono>
 
 /*readonly*/ CProxy_Master masterProxy;
 /*readonly*/ CProxy_Slave slaveArray;
@@ -93,6 +94,8 @@ Node* Master::nextTask() {
 	if ( mTasks.empty() ) {
 		std::list<Node*>::iterator it;
 
+		auto begin = std::chrono::high_resolution_clock::now();
+
 		// Find ready task(s) from nodes
 		for (it=mNodes.begin(); it!=mNodes.end(); ) {
 			Node *node = *it;
@@ -108,6 +111,11 @@ Node* Master::nextTask() {
 				++it;
 			}
 		}
+
+		auto end = std::chrono::high_resolution_clock::now();
+
+		std::cout << "Scheduling time [ O(n) worst case ] : " << std::chrono::duration_cast<std::chrono::milliseconds>(end-begin).count() << " ms"
+			<< " / " << std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count() << " ns" << std::endl;
 	}
 
 	if ( !mTasks.empty() ) {
