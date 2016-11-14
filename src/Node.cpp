@@ -1,11 +1,10 @@
 
 #include "Node.hpp"
+#include <fstream>
 
-
-Node::Node(const std::string name) {
+Node::Node(const std::string name, bool isDone) {
 	mName = name;
-	mTargets = NULL;
-	mIsDone = false;
+	mIsDone = isDone;
 }
 
 std::string Node::getName() {
@@ -65,30 +64,45 @@ const std::vector<std::string>& Node::getCmds() {
 	return mCmds;
 }
 
-void Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves, std::map<std::string, Node*>& targets ) {
+bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
+					std::map<std::string, Node*>& targets ) {
 
+	bool success = true;
 
 	std::cout << "setDeps IN " << std::endl;
 
 	for (std::string name : mDepNames) {
+
 		// Parcours des dépendances
 		std::cerr << "for " << name << std::endl;
 
 		Node *dep = targets[name];
 
+		// If dependency not found but already existing,
+		// create the node and set it to "built" state
+		if ( dep == NULL && std::ifstream( name ).good() ) {
+			dep = new Node(name, true);
+			targets[name] = dep;
+		}
+
 		if (dep != NULL) {
 
 			// Set child deps
-			dep->setDeps(nodes, leaves, targets);
+			success &= dep->setDeps(nodes, leaves, targets);
 
 			// Add new dep
 			mDeps.push_back(dep);
-
 
 		}
 		else {
 			std::cout << "FATAL ERROR : missing dependency "
 				<< name << std::endl;
+
+			success = false;
+		}
+
+		if ( !success ) {
+			return success;
 		}
 	}
 
@@ -102,5 +116,7 @@ void Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves, std::map<
 		// Add highest deps at the end
 		nodes.push_back(this);
 	}
+
+	return success;
 }
 

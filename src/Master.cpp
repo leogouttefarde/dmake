@@ -1,5 +1,6 @@
 
 #include "Master.hpp"
+#include <chrono>
 
 /*readonly*/ CProxy_Master masterProxy;
 /*readonly*/ CProxy_Slave slaveArray;
@@ -14,33 +15,34 @@ Master::Master(CkArgMsg *m)
 	masterProxy = thisProxy;
 	nSlaves = CkNumPes() - 1;
 
-	if (nSlaves == 0) {
+	if (nSlaves < 1) {
 		nSlaves = 1;
 	}
 
 	if (m->argc > 1) {
 		target = m->argv[1];
-		Node *tree = Parser::ParseFile( target );
+		Node *tree = Parser::ParseFile( target, mTargets );
+		bool success = false;
 
 		if ( tree != NULL ) {
-			tree->setDeps(mNodes, mTasks, *(tree->mTargets));
+			success = tree->setDeps(mNodes, mTasks, mTargets);
 		}
-		else {
+
+		if ( !success ) {
 			CkExit();
 		}
 
-		mTargets = *(tree->mTargets);
-
 		CkPrintf("Fin de la construction de l'arbre\n");
-		// CkExit();
 		// printf("target = %s\n", target);
-		CkPrintf("chare array construction\n");
+
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
+
 		CkPrintf("%d slaves created\n", nSlaves);
+
 	} else {
 		// target = "Makefile";
-		CkPrintf("Veuillez entrer le chemin du Makefile en argument\n");
+		CkPrintf("Usage : %s <MakefilePath>\n", m->argv[0]);
 		CkExit();
 	}
 }
@@ -84,6 +86,51 @@ void Master::finishJob(File &target)
 	else {
 		std::cout << "An unknown job just finished" << std::endl;
 	}
+}
+
+Node* Master::nextTask() {
+	Node *jTask = NULL;
+
+	if ( mTasks.empty() ) {
+		std::list<Node*>::iterator it;
+
+		auto begin = std::chrono::high_resolution_clock::now();
+
+		// Find ready task(s) from nodes
+		for (it=mNodes.begin(); it!=mNodes.end(); ) {
+			Node *node = *it;
+
+			if ( node->isReady() ) {
+				mTasks.push_back(node);
+				it = mNodes.erase(it);
+			}
+
+			// Only increment when current
+			// iterator is not consumed
+			else {
+				++it;
+			}
+		}
+
+		auto end = std::chrono::high_resolution_clock::now();
+
+		std::cout << "Scheduling time [ O(n) worst case ] : " << std::chrono::duration_cast<std::chrono::milliseconds>(end-begin).count() << " ms"
+			<< " / " << std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count() << " ns" << std::endl;
+	}
+
+	if ( !mTasks.empty() ) {
+
+		jTask = mTasks.front();
+		mTasks.pop_front();
+
+		// Run last job directly from master
+		if ( jTask != NULL && mNodes.empty() && mTasks.empty() ) {
+			Slave::ExecuteCmds( jTask->getCmds() );
+			jTask = NULL;
+		}
+	}
+
+	return jTask;
 }
 
 

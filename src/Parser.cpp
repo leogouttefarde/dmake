@@ -6,7 +6,7 @@ Parser::Parser(const std::string path) {
 
 	mFile.open(path, std::ifstream::in);
 
-	if (mFile.is_open()) {
+	if ( mFile.is_open() ) {
 		std::cout << "Parser started";
 	}
 	else {
@@ -24,9 +24,24 @@ void Parser::finish() {
 	mFile.close();
 }
 
+bool Parser::nextLine() {
+	bool ret = true;
+
+	if ( mNext.size() == 0 ) {
+		if ( !std::getline(mFile, mNext) )
+			ret = false;
+	}
+
+	return ret;
+}
+
+void Parser::consumeLine() {
+	mNext = "";
+}
+
 bool Parser::parseRuleName(std::string& oName) {
 
-	while ( std::getline(mFile, mNext) ) {
+	while ( nextLine() ) {
 
 		size_t pos = mNext.find(':');
 
@@ -39,8 +54,9 @@ bool Parser::parseRuleName(std::string& oName) {
 
 			return true;
 		}
-		// else
-		// 	std::cout << "Wild line" << std::endl;
+		else {
+			consumeLine();
+		}
 
 	}
 
@@ -64,6 +80,8 @@ void Parser::parseDependencies(Node *pTarget) {
 			std::cout << "Dependency added : '" << dep << "'" << std::endl;
 		}
 	}
+
+	consumeLine();
 }
 
 void Parser::parseCommands(Node *pTarget) {
@@ -72,7 +90,13 @@ void Parser::parseCommands(Node *pTarget) {
 		return;
 	}
 
-	while ( std::getline(mFile, mNext) ) {
+	while ( nextLine() ) {
+
+		// No more commands if no tab
+		if ( mNext[0] != '\t' ) {
+			break;
+		}
+
 		mNext = trim(mNext);
 
 		if (mNext.size() > 0) {
@@ -82,7 +106,13 @@ void Parser::parseCommands(Node *pTarget) {
 		else {
 			break;
 		}
+
+		consumeLine();
 	}
+}
+
+std::map<std::string,Node*>& Parser::getTargets() {
+	return mTargets;
 }
 
 Node* Parser::parseTarget() {
@@ -125,20 +155,22 @@ Node* Parser::parseFile() {
 		} while ( pTarget != NULL );
 	}
 
-	// 16:07 : Leo a dit que je peux changer
-	if ( first != NULL ) {
-		first->mTargets = new std::map<std::string,Node*>(mTargets);
-	}
+	// if ( first != NULL ) {
+	// Idéalement : finaliser l'arbre içi
+	// }
 
 	return first;
 }
 
-Node* Parser::ParseFile(const std::string path) {
+Node* Parser::ParseFile( const std::string path,
+		std::map<std::string,Node*>& oTargets ) {
 
 	Parser parser(path);
 
 	Node *first	= parser.parseFile();
 	parser.finish();
+
+	oTargets = parser.getTargets();
 
 	return first;
 }

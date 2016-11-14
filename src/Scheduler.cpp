@@ -17,10 +17,10 @@ void Scheduler::notifyFinished(Node* node)
 	for (int i = 0; i < node->mFathers.size(); i++)
 	{
 		Node* father = node->mFathers[i];
-		father->nbUnfinishedSons--;
-		if (father->nbUnfinishedSons == 0)
+		father->mNbUnfinishedSons--;
+		if (father->mNbUnfinishedSons == 0)
 		{
-			mTabPrio[father->depth].push(father);
+			mTabPrio[father->mDepth].push(father);
 		}
 	}
 }
@@ -30,7 +30,7 @@ Node* Scheduler::getNextTask()
 	Node* task;
 	for (int i = mMaxDepth; i >= 0; i--)
 	{
-		task = mTabPrio[i].front(); // TODO: vérifier que front retourne NULL si vide
+		task = mTabPrio[i].front(); // TODO: check that front() return NULL if the queue is empty
 		if (task)
 		{
 			mTabPrio[i].pop();

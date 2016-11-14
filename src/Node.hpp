@@ -13,7 +13,7 @@ class Node {
 
 public:
 
-	Node(const std::string name);
+	Node(const std::string name, bool isDone = false);
 
 	std::string getName();
 
@@ -37,11 +37,11 @@ public:
 
 	const std::vector<std::string>& getCmds();
 
-	void setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves, std::map<std::string, Node*>& targets);
+	bool setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
+					std::map<std::string, Node*>& targets);
 
 
-	std::map<std::string,Node*> *mTargets;
-
+	int 						mDepth;
 	int 						mNbUnfinishedSons;
         boost::optional<bool>	 			mNeedToBeBuilt;
 private:

@@ -6,15 +6,13 @@ CHARMC=${CPATH}/bin/charmc $(OPTS)
 
 OBJS = Master.o Slave.o Parser.o Node.o
 OBJSPARSER = Parseur.o
-all: Make
 
-parser: $(OBJSPARSER)
-	g++ Main.cpp -o main $^
+all: Make
 
 Make: $(OBJS)
 	$(CHARMC) -language charm++ -g -o $@ $(OBJS)
 
-Make.decl.h: Make.ci
+Make.decl.h: Make.ci Job.h File.h
 	$(CHARMC) Make.ci
 
 clean:
@@ -32,5 +30,3 @@ Parser.o: Parser.cpp Parser.hpp
 Node.o: Node.cpp Node.hpp
 	$(CHARMC) -g -c Node.cpp
 
-Parseur.o: Parseur.cpp
-	g++ -o $@ -c $<
