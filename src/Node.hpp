@@ -6,6 +6,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <boost/optional.hpp>
 
 
 class Node {
@@ -42,7 +43,7 @@ public:
 	std::map<std::string,Node*> *mTargets;
 
 	int 						mNbUnfinishedSons;
-	bool	 					mNeedToBeBuilt;
+        boost::optional<bool>	 			mNeedToBeBuilt;
 private:
 	std::string 				mName;
 
