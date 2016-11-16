@@ -103,6 +103,8 @@ Node* Master::nextTask() {
 			if ( node->isReady() ) {
 				mTasks.push_back(node);
 				it = mNodes.erase(it);
+
+				CkPrintf("New task ready : %s\n", node->getName().c_str());
 			}
 
 			// Only increment when current
@@ -122,6 +124,8 @@ Node* Master::nextTask() {
 
 		jTask = mTasks.front();
 		mTasks.pop_front();
+
+		CkPrintf("\nNext task : %s\n", jTask->getName().c_str());
 
 		// Run last job directly from master
 		if ( jTask != NULL && mNodes.empty() && mTasks.empty() ) {
