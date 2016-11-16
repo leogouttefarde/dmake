@@ -5,6 +5,7 @@
 Node::Node(const std::string name, bool isDone) {
 	mName = name;
 	mIsDone = isDone;
+	mDepsOk = false;
 }
 
 std::string Node::getName() {
@@ -69,6 +70,11 @@ bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
 
 	bool success = true;
 
+	// Process each node only one time
+	if ( mDepsOk ) {
+		return success;
+	}
+
 	std::cout << "setDeps IN " << std::endl;
 
 	for (std::string name : mDepNames) {
@@ -116,6 +122,8 @@ bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
 		// Add highest deps at the end
 		nodes.push_back(this);
 	}
+
+	mDepsOk = true;
 
 	return success;
 }

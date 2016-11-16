@@ -53,5 +53,7 @@ private:
 	std::vector<std::string> 	mCmds;
 
 	bool	 					mIsDone;
+
+	bool	 					mDepsOk;
 };
 
