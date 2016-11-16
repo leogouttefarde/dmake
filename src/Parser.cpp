@@ -77,7 +77,7 @@ void Parser::parseDependencies(Node *pTarget) {
 
 		if (dep.size() > 0) {
 			pTarget->addDepName(dep);
-			std::cout << "Dependency added : '" << dep << "'" << std::endl;
+			//std::cout << "Dependency added : '" << dep << "'" << std::endl;
 		}
 	}
 
@@ -101,7 +101,7 @@ void Parser::parseCommands(Node *pTarget) {
 
 		if (mNext.size() > 0) {
 			pTarget->addCmd(mNext);
-			std::cout << "Command added : '" << mNext << "'" << std::endl;
+			//std::cout << "Command added : '" << mNext << "'" << std::endl;
 		}
 		else {
 			break;
@@ -123,14 +123,14 @@ Node* Parser::parseTarget() {
 		return NULL;
 	}
 
-	std::cout << "Target name : '" << name << "'" << std::endl;
+	//std::cout << "Target name : '" << name << "'" << std::endl;
 
 	Node *pTarget = new Node(name);
 
 	parseDependencies(pTarget);
 	parseCommands(pTarget);
 
-	std::cout << std::endl;
+	//std::cout << std::endl;
 
 	return pTarget;
 }

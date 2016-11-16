@@ -75,12 +75,12 @@ bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
 		return success;
 	}
 
-	std::cout << "setDeps IN " << std::endl;
+	//std::cout << "setDeps IN " << std::endl;
 
 	for (std::string name : mDepNames) {
 
 		// Parcours des dépendances
-		std::cerr << "for " << name << std::endl;
+		//std::cerr << "for " << name << std::endl;
 
 		Node *dep = targets[name];
 
