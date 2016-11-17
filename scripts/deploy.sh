@@ -31,7 +31,7 @@ cat tmp >> $NODELIST
 rm tmp
 
 
-echo -e "apt-get update\napt-get -y install blender ffmpeg ImageMagick" > task.sh
+echo -e "apt-get update\napt-get -y install blender ffmpeg ImageMagick ncftp" > task.sh
 echo -e "nohup sh ~/task.sh &> out.txt &" > runTask.sh
 
 sort -u $OAR_NODEFILE > nodes

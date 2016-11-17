@@ -1,8 +1,6 @@
 #! /bin/bash
 
 RFOLDER=graphs
-NB_COMP_METHS=1
-NB_MAX_ARRAYS=1
 DATA=
 
 init_file()
@@ -32,7 +30,7 @@ non_zero()
 
 array_reset()
 {
-  for ((i=0; i < DATA_SIZE * NB_COMP_METHS * NB_MAX_ARRAYS; i++)); do
+  for ((i=0; i < DATA_SIZE; i++)); do
     DATA[$i]=0
   done
 }
@@ -41,28 +39,19 @@ array_set_size()
 {
   DATA_SIZE=$1
   array_reset
+  echo "array_set_size : $DATA_SIZE"
 }
 
-# usage : array_idx <num> <method> <idx>
-array_idx()
-{
-  local idx=$3
-  local meth=$2
-  local num=$1
-
-  echo $((idx + (meth + (num * NB_COMP_METHS)) * DATA_SIZE))
-}
-
-# usage : array_set <num> <method> <idx> <value>
+# usage : array_set <idx> <value>
 array_set()
 {
-  DATA[$(array_idx $1 $2 $3)]=$4
+  DATA[$1]=$2
 }
 
-# usage : array_get <num> <method> <idx>
+# usage : array_get <idx>
 array_get()
 {
-  local val=${DATA[$(array_idx $1 $2 $3)]}
+  local val=${DATA[$1]}
 
   if [[ ! ${val} ]]; then
     val=0
@@ -105,22 +94,19 @@ data_array()
     local num=$2
     local FILE="${1}".R
 
-    # for v in DATA; do
-    for ((METHOD=0; METHOD < 1; METHOD++)); do
+    name=data #"$METHOD"
+    printf "$name <- c(" >> "${FILE}"
+    echo "DATA_SIZE = $DATA_SIZE"
 
-      name=data #"$METHOD"
-      printf "$name <- c(" >> "${FILE}"
+    for ((i=0; i < DATA_SIZE; i++)); do
+      val=$(array_get $i)
+      printf " $val" >> "${FILE}"
 
-      for ((i=0; i < DATA_SIZE; i++)); do
-        val=$(array_get $num $METHOD $i)
-        printf " $val" >> "${FILE}"
-
-        if ((i < DATA_SIZE-1)); then
-          printf ", " >> "${FILE}"
-        else
-          printf " )\n\n" >> "${FILE}"
-        fi
-      done
+      if ((i < DATA_SIZE-1)); then
+        printf ", " >> "${FILE}"
+      else
+        printf " )\n\n" >> "${FILE}"
+      fi
     done
 
   fi;

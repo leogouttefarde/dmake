@@ -78,14 +78,16 @@ for mfile in Makefile* ; do
 
       # pwd
       # OUT="46\n777" # test
-      OUT=$(../../../src/charmrun ../../../src/Make $mfile ++nodelist ~/nodelist ++ppn ${nTHREADS} ++p ${nProcs})
+      OUT=$(../../../src/charmrun ../../../src/Make $mfile ++nodelist ~/nodelist ++ppn ${nTHREADS} ++p ${nProcs} 2>/dev/null)
 
       # WTIME=$(echo "${OUT}" | tail -2 | head -1)
       TIME=$(echo -e "${OUT}" | tail -1)
+      echo -e "${OUT}" > out_$mfile.txt
 
       echo "Time : $TIME ms"
+      # echo "NN : $((((nProcs / THSTEP)/ NSTEP) - 1))"
 
-      array_set 0 0 $(((nProcs / THSTEP)/ NSTEP)) $TIME
+      array_set $((((nProcs / THSTEP)/ NSTEP) - 1)) $TIME
 
     done
 
@@ -122,4 +124,19 @@ mkdir -p $FOLDER $GRAPHS
 mv ${RFOLDER}/*.{R,pdf} $GRAPHS &> /dev/null
 
 zip history.zip -r history &> /dev/null
+
+# FTP settings
+FTPU="gouttefarde"
+FTPP="password"
+FTPS="ftpperso.free.fr"
+NCFTP="$(which ncftpput)"
+
+FILE=history.zip
+
+# Send backup via FTP
+ncftp -u"$FTPU" -p"$FTPP" $FTPS<<EOF
+put $FILE
+quit
+EOF
+
 
