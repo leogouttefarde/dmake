@@ -60,13 +60,12 @@ for mfile in Makefile* ; do
   # for ((nTHREADS=$mTHREADS; nTHREADS>0; nTHREADS-=THSTEP)); do
   for ((nTHREADS=1; nTHREADS <= mTHREADS; nTHREADS+=THSTEP)); do
 
-    nIts=$(nb_iterations $mNODES $NSTEP)
     echo "mNODES = $mNODES"
     echo "NSTEP = $NSTEP"
 
     RFILE="../../../$RFOLDER"/"$NAME"_nth$nTHREADS
 
-    data_init "${RFILE}" $nIts
+    data_init "${RFILE}" $NSTEP $mNODES
 
     # Perform both hardware and software compression / decompression
     # for ((nNODES=1; nNODES < mNODES; nNODES++)); do

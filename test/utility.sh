@@ -62,16 +62,16 @@ array_get()
 
 data_init()
 {
-  if [ $# -ge 2 ]; then
+  if [ $# -ge 3 ]; then
     BASENAME=$(basename $1)
 
     cat > "${1}".R <<EOF
 pdf("$BASENAME.pdf")
 
-nCPU = $2
+nCPU = $3
 
 #x_axis <- seq.int( nCPU, 1, -1 )
-x_axis <- seq.int( 1, nCPU, 1 )
+x_axis <- seq.int( 1, nCPU, $2 )
 
 EOF
 
