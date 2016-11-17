@@ -79,8 +79,8 @@ for mfile in Makefile* ; do
       # OUT="46\n777" # test
       OUT=$(../../../src/charmrun ../../../src/Make $mfile ++nodelist ~/nodelist ++ppn ${nTHREADS} ++p ${nProcs} 2>/dev/null)
 
-      TIME=$(echo "${OUT}" | tail -2 | head -1)
       # TIME=$(echo -e "${OUT}" | tail -1)
+      TIME=$(echo -e "${OUT}" | tail -2 | head -1)
       echo -e "${OUT}" > out_$mfile.txt
 
       echo "Time : $TIME ms"

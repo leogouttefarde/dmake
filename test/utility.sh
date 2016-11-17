@@ -75,7 +75,7 @@ x_axis <- seq.int( 1, nCPU, $2 )
 
 EOF
 
-    array_set_size $2
+    array_set_size $(nb_iterations $3 $2)
   fi;
 }
 
@@ -122,6 +122,8 @@ data_end()
 # -1 )
 #data <- head( data, -1)
 
+data=data/1000
+
 #sCPU = tail(data, n=1)
 
 sCPU = head(data, n=1)
@@ -136,7 +138,7 @@ lines( x_ideal, y_ideal, pch="+", type="o", col="cyan", ann=FALSE )
 
 title( main="Durée de compilation", font.main=1, cex.main=2 )
 title( xlab="Nombre de machines", cex.lab=1.2 )
-title( ylab="Durée", cex.lab=1.2 )
+title( ylab="Durée en secondes", cex.lab=1.2 )
 
 
 # places a legend at the appropriate place
