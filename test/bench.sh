@@ -15,12 +15,13 @@ START=$($GETTIME)
 LOGFILE=$TIMESTAMP.log
 TMPLOG=pending.log
 mTHREADS=1
-mNODES=1
+# mNODES=40
 mNODES=$(cat ~/nodes | wc -l)
 MCPU=$(get_max_cpu)
 CLEVEL=1
 THSTEP=1
-NSTEP=1
+nSAMPLES=7
+NSTEP=$(nb_iterations $mNODES $(nb_iterations $mNODES $nSAMPLES))
 
 log()
 {

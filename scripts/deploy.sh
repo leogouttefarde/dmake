@@ -2,7 +2,7 @@
 # et installation des librairies requises
 
 # Dure quelques secondes
-oarsub -I -l nodes=30 -t deploy
+oarsub -I -l nodes=40 -t deploy
 
 
 # Assez long (2-3 minutes)
