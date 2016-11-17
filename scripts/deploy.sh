@@ -85,6 +85,7 @@ gcc premier.c -lm -o premier
 
 cd ~
 
+
 # for each node
 for SERV in $(cat ~/nodes); do
 
@@ -93,10 +94,12 @@ for SERV in $(cat ~/nodes); do
 done
 
 
-# Ready for testing
-cd ~/make/sujet/makefiles/blender_2.49
+## Ready for testing
+#cd ~/make/sujet/makefiles/blender_2.49
 
+#../../../src/charmrun ++nodelist ~/nodelist ++ppn 2 ++p 60  ../../../src/Make Makefile
 
+cd ~/make
 
-../../../src/charmrun ++nodelist ~/nodelist ++ppn 2 ++p 60  ../../../src/Make Makefile
+nohup ./test/bench.sh &> bench.log &
 
