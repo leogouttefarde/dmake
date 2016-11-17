@@ -21,6 +21,4 @@ exemple :
 ./random_matrix.pl 7 7 > a
 ./random_matrix.pl 7 7 > b
 
-PATH=.:PATH
-
 
