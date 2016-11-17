@@ -3,6 +3,7 @@
 #include "Make.decl.h"
 #include "Slave.hpp"
 #include "Parser.hpp"
+#include <chrono>
 
 
 class Master : public CBase_Master {
@@ -20,6 +21,8 @@ public:
 
 	void runJobs();
 
+	void exit();
+
 
 private:
 
@@ -28,6 +31,8 @@ private:
 	std::list<Node*> mNodes;
 
 	std::map<std::string,Node*> mTargets;
+
+	std::chrono::_V2::system_clock::time_point mStart;
 
 };
 

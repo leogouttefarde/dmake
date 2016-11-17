@@ -1,6 +1,5 @@
 
 #include "Master.hpp"
-#include <chrono>
 
 /*readonly*/ CProxy_Master masterProxy;
 /*readonly*/ CProxy_Slave slaveArray;
@@ -28,11 +27,13 @@ Master::Master(CkArgMsg *m)
 		}
 
 		if ( !success ) {
-			CkExit();
+			this->exit();
 		}
 
 		CkPrintf("Fin de la construction de l'arbre\n");
 		// printf("target = %s\n", target);
+
+		mStart = std::chrono::high_resolution_clock::now();
 
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
@@ -42,8 +43,19 @@ Master::Master(CkArgMsg *m)
 	} else {
 		// target = "Makefile";
 		CkPrintf("Usage : %s <MakefilePath>\n", m->argv[0]);
-		CkExit();
+		this->exit();
 	}
+}
+
+void Master::exit()
+{
+	auto end = std::chrono::high_resolution_clock::now();
+
+	std::cout << std::endl << "Elapsed time (ms) :" << std::endl <<
+		std::chrono::duration_cast<std::chrono::milliseconds>(end-mStart).count()
+		<< std::endl;
+
+	CkExit();
 }
 
 std::list<int> freeSlaves;
@@ -66,7 +78,7 @@ void Master::runJobs()
 
 	// Exit when nothing left to do
 	if (freeSlaves.size() == nSlaves) {
-		CkExit();
+		this->exit();
 	}
 }
 
@@ -143,7 +155,7 @@ Node* Master::nextTask() {
 			jTask = NULL;
 
 			// Exit after last job
-			CkExit();
+			this->exit();
 		}
 	}
 

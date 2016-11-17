@@ -2,7 +2,7 @@
 # et installation des librairies requises
 
 # Dure quelques secondes
-oarsub -I -l nodes=7 -t deploy
+oarsub -I -l nodes=30 -t deploy
 
 
 # Assez long (2-3 minutes)
@@ -98,5 +98,5 @@ cd ~/make/sujet/makefiles/blender_2.49
 
 
 
-../../../src/charmrun ++nodelist ~/nodelist ++ppn 4 ++p 28  ../../../src/Make Makefile
+../../../src/charmrun ++nodelist ~/nodelist ++ppn 2 ++p 60  ../../../src/Make Makefile
 
