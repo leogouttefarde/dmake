@@ -1,4 +1,5 @@
-
+# Script de déploiement par réinstallation des noeuds
+# et installation des librairies requises
 
 # Dure quelques secondes
 oarsub -I -l nodes=7 -t deploy
@@ -78,7 +79,10 @@ cat Makefile_ >> Makefile
 
 make -j8
 
-cp Make ~
+
+cd ~/make/sujet/makefiles/premier
+gcc premier.c -lm -o premier
+
 cd ~
 
 # for each node
@@ -94,5 +98,5 @@ cd ~/make/sujet/makefiles/blender_2.49
 
 
 
-../../../src/charmrun ++nodelist ~/nodelist ++ppn 3 ++p 18  ../../../src/Make Makefile
+../../../src/charmrun ++nodelist ~/nodelist ++ppn 4 ++p 28  ../../../src/Make Makefile
 
