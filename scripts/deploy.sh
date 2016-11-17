@@ -1,9 +1,10 @@
 
 
+# Dure quelques secondes
 oarsub -I -l nodes=7 -t deploy
 
 
-
+# Assez long (2-3 minutes)
 kadeploy3 -f $OAR_NODE_FILE -e jessie-x64-std -k
 
 
@@ -63,24 +64,35 @@ tar -xvzf charm-6.7.1.tar.gz
 cd ~/charm-6.7.1
 ./build charm++ netlrts-linux-x86_64 --with-production -j8
 
-
+# Input password here
 git clone ssh://lgout@depots.ensimag.fr/depots/2016/BDFG_SDCA/TP_SDCA.git ~/make
 
+
+
 cd ~/make/src
+
+# Fix Charm++ path
+tail -n +4 Makefile >> Makefile_
+echo "CPATH=~/charm-6.7.1" > Makefile
+cat Makefile_ >> Makefile
+
 make -j8
 
 cp Make ~
 cd ~
 
 # for each node
-for SERV in $(cat nodes); do
+for SERV in $(cat ~/nodes); do
 
   scp -o StrictHostKeyChecking=no -rp ~/make root@$SERV:~
 
 done
 
 
+# Ready for testing
 cd ~/make/sujet/makefiles/blender_2.49
-../../../src/charmrun ++nodelist ~/nodelist ++ppn 3 ++p 18  ../../../src/Make Makefile
 
+
+
+../../../src/charmrun ++nodelist ~/nodelist ++ppn 3 ++p 18  ../../../src/Make Makefile
 

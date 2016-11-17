@@ -12,11 +12,13 @@ public:
 	Master(CkArgMsg *m);
 
 	void requestJob(int iSlave);
-	void finishJob(File &target);
+	void finishJob(int iSlave, File &target);
 
 	// Returns the next task to be distributed,
 	// or NULL when none currently available
 	Node* nextTask();
+
+	void runJobs();
 
 
 private:

@@ -8,12 +8,12 @@
 class File {
 
 public:
+	std::string mPath;
 
 	File(std::string path, bool preload = true) : mPath(path) {
 
 		if (preload)
 			read();
-
 	}
 
 	File() {
@@ -34,24 +34,23 @@ public:
 		return *this;
 	}
 
-	// read file data from path
+	// Read file data from path
 	void read() {
 
-		// force write file into path (do not rely on NFS)
-		std::string path(mPath);
-
-		FILE *file = fopen( path.c_str(), "rb" );
+		FILE *file = fopen( mPath.c_str(), "rb" );
 
 		if ( file != NULL ) {
+
+			// Compute file size
 			fseek(file, 0, SEEK_END);
 			unsigned long size = ftell(file);
 			fseek(file, 0, SEEK_SET);
 
+			// Allocate file space
 			mData.resize( size );
 
-			// assert( mSize == fwrite(mData, 1, mSize, file) );
+			// Read file data
 			fread((void*)mData.data(), 1, size, file);
-
 			fclose(file);
 		}
 	}
@@ -61,13 +60,10 @@ public:
 		if (!mData.size())
 			return;
 
-		// force write file into path (do not rely on NFS)
-		std::string path(mPath);
-
-		FILE *file = fopen( path.c_str(), "wb" );
+		// Forcefully write file into path
+		FILE *file = fopen( mPath.c_str(), "wb" );
 
 		if ( file != NULL ) {
-			// assert( mSize == fwrite(mData, 1, mSize, file) );
 			fwrite(mData.data(), 1, mData.size(), file);
 			fclose(file);
 		}
@@ -78,6 +74,7 @@ public:
 		return mData.size();
 	}
 
+	// A way to store binary data manually (for test purposes)
 	void setData( uint8_t *data, uint64_t size ) {
 
 		if (data == NULL || size == 0) {
@@ -91,7 +88,6 @@ public:
 		}
 	}
 
-	std::string mPath;
 
 private:
 	std::vector<uint8_t> mData;

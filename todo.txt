@@ -1,6 +1,5 @@
 
 
-- ne générer que les dépendances qui doivent l'être (vérifier les dates de fichiers)
 - rapport
 - tests
 - slides
