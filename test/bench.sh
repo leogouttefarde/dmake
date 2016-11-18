@@ -7,7 +7,7 @@ SECONDS=0
 BIN=src/Make
 BENCHDIR=benchmark
 MACHINE=$(hostname)
-HISTDIR=history/$MACHINE
+HISTDIR=history
 GETTIME="date +%d/%m/%Y-%H:%M:%S"
 TIMESTAMP=$(date +%Y-%m-%d_%H:%M:%S)
 START=$($GETTIME)
@@ -115,12 +115,10 @@ log "Duration   : $ELAPSED"
 
 FOLDER=$HISTDIR/$TIMESTAMP
 
-GRAPHS=$FOLDER/graphs
-
-mkdir -p $FOLDER $GRAPHS
+mkdir -p $FOLDER
 
 # mv ${TMPLOG} $FOLDER/${LOGFILE} &> /dev/null
-mv ${RFOLDER}/*.{R,pdf} $GRAPHS &> /dev/null
+mv ${RFOLDER}/*.{R,pdf} $FOLDER &> /dev/null
 
 zip history.zip -r history &> /dev/null
 

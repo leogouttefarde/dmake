@@ -70,8 +70,10 @@ pdf("$BASENAME.pdf")
 
 nCPU = $3
 
-#x_axis <- seq.int( nCPU, 1, -1 )
-x_axis <- seq.int( 1, nCPU, $2 )
+STEP = $2
+
+#x_axis <- seq.int( nCPU, STEP, -STEP )
+x_axis <- seq.int( STEP, nCPU, STEP )
 
 EOF
 
@@ -122,15 +124,16 @@ data_end()
 # -1 )
 #data <- head( data, -1)
 
-data=data/1000
+data = data / 1000
 
 #sCPU = tail(data, n=1)
 
+xLim = 2 * nCPU / 3
 sCPU = head(data, n=1)
-yLim = sCPU + 100
+yLim = sCPU + sCPU / 100
 
-x_ideal <- c( 1, nCPU )
-y_ideal <- c( sCPU, sCPU / nCPU )
+x_ideal <- c( STEP, nCPU )
+y_ideal <- c( sCPU, STEP * sCPU / nCPU )
 y_lims <- c( min(data), yLim )
 
 plot( x_axis, data, pch="+", type="o", col="dark blue", ann=FALSE, ylim=y_lims )
@@ -142,7 +145,7 @@ title( ylab="Durée en secondes", cex.lab=1.2 )
 
 
 # places a legend at the appropriate place
-legend( 1, yLim,
+legend( xLim, yLim,
 
  # puts text in the legend
 c("Parallélisation idéale", "Temps mesurés"),

@@ -3,4 +3,4 @@
 DIR=$(cd "$(dirname "$0")" && pwd)
 . "$DIR"/utility.sh
 
-R_exec_all "history/*/*/graphs"
+R_exec_all "history/*"
