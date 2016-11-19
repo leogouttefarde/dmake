@@ -66,6 +66,12 @@ void Master::runJobs()
 
 	while ( !freeSlaves.empty() && (task = nextTask()) ) {
 
+		// Empty tasks finish instantly
+		if ( task->getCmds().size() == 0 ) {
+			task->setDone();
+			continue;
+		}
+
 		int idx = freeSlaves.front();
 		freeSlaves.pop_front();
 
