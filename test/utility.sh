@@ -147,11 +147,15 @@ sCPU = head(data, n=1)
 yLim = sCPU + sCPU / 100
 
 x_ideal <- c( 1, nCPU )
-y_ideal <- c( sCPU, sCPU / nCPU )
+y_ideal <- data / x_axis
 y_lims <- c( min(data), yLim )
 
-plot( x_axis, data, pch="+", type="o", col="dark blue", ann=FALSE, ylim=y_lims )
-lines( x_ideal, y_ideal, pch="+", type="o", col="cyan", ann=FALSE )
+ideal <- function( n ) {
+  return (sCPU/n)
+}
+
+plot( ideal, 1, nCPU, ann=FALSE, col="cyan" )
+lines( x_axis, data, pch="+", cex=1.2, type="o", col="dark blue", ann=FALSE, ylim=y_lims )
 
 title( main="Durée de compilation", font.main=1, cex.main=2 )
 title( xlab="Nombre de machines", cex.lab=1.2 )
