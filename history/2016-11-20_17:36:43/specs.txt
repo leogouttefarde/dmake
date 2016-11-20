@@ -1,0 +1,42 @@
+
+
+
+Available in queue default:
+ - genepi (2008): 34 nodes (2 CPUs Intel Xeon E5420, 4 cores/CPU, 8GB RAM, 153GB HDD)
+ - edel   (2008): 72 nodes (2 CPUs Intel Xeon E5520, 4 cores/CPU, 24GB RAM, 119GB SSD)
+ - adonis (2010): 10 nodes (2 CPUs Intel Xeon E5520, 4 cores/CPU, 24GB RAM, 233GB HDD)
+
+
+28 machines
+
+
+
+edel-1.grenoble.grid5000.fr
+edel-11.grenoble.grid5000.fr
+edel-13.grenoble.grid5000.fr
+edel-15.grenoble.grid5000.fr
+edel-16.grenoble.grid5000.fr
+edel-2.grenoble.grid5000.fr
+edel-21.grenoble.grid5000.fr
+edel-22.grenoble.grid5000.fr
+edel-23.grenoble.grid5000.fr
+edel-25.grenoble.grid5000.fr
+edel-26.grenoble.grid5000.fr
+edel-37.grenoble.grid5000.fr
+edel-38.grenoble.grid5000.fr
+edel-39.grenoble.grid5000.fr
+edel-40.grenoble.grid5000.fr
+edel-44.grenoble.grid5000.fr
+edel-47.grenoble.grid5000.fr
+edel-49.grenoble.grid5000.fr
+edel-55.grenoble.grid5000.fr
+edel-64.grenoble.grid5000.fr
+edel-67.grenoble.grid5000.fr
+edel-69.grenoble.grid5000.fr
+edel-70.grenoble.grid5000.fr
+edel-9.grenoble.grid5000.fr
+genepi-30.grenoble.grid5000.fr
+genepi-4.grenoble.grid5000.fr
+genepi-6.grenoble.grid5000.fr
+genepi-8.grenoble.grid5000.fr
+
