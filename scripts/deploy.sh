@@ -7,7 +7,7 @@ ssh grenoble
 
 
 # Dure quelques secondes
-oarsub -I -l nodes=62,walltime=4:00 -t deploy
+oarsub -I -l nodes=42,walltime=4:00 -t deploy
 
 
 # Assez long (2-3 minutes)
