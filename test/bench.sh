@@ -15,7 +15,7 @@ START=$($GETTIME)
 LOGFILE=$TIMESTAMP.log
 TMPLOG=pending.log
 mTHREADS=1
-# mNODES=40
+# mNODES=62
 mNODES=$(cat ~/nodes | wc -l)
 MCPU=$(get_max_cpu)
 CLEVEL=1
@@ -52,8 +52,6 @@ for mfile in Makefile* ; do
 
   BASE=${testDir}${mfile}
   NAME="${BASE//[\/]/_}"
-
-  nIts=$(nb_iterations $CPUs $CSTEP)
 
 
   # Check all possible CPU numbers

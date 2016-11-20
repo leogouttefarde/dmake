@@ -308,7 +308,7 @@ nb_iterations()
     if ! ((CPUs % CSTEP)) ; then
       ret=$ret
     else
-      ret=$((ret++))
+      ret=$((ret+1))
     fi;
 
     echo $ret
