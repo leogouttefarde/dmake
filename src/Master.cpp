@@ -14,11 +14,7 @@ Master::Master(CkArgMsg *m)
 	const char *target = NULL;
 
 	masterProxy = thisProxy;
-	nSlaves = CkNumPes() - 1;
-
-	if (nSlaves < 1) {
-		nSlaves = 1;
-	}
+	nSlaves = CkNumPes();
 
 	if (m->argc > 1) {
 		target = m->argv[1];
