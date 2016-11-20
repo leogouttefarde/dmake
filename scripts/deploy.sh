@@ -1,6 +1,7 @@
 # Script de déploiement par réinstallation des noeuds
 # et installation des librairies requises
 
+# Step 1
 ssh lgouttefarde@access.grid5000.fr
 ssh grenoble
 
@@ -13,6 +14,8 @@ oarsub -I -l nodes=62,walltime=4:00 -t deploy
 kadeploy3 -f $OAR_NODE_FILE -e jessie-x64-std -k
 
 
+
+# Step 2
 
 # runs a script remotely
 remote_run()
@@ -41,7 +44,7 @@ echo -e "nohup sh ~/task.sh &> out.txt &" > runTask.sh
 sort -u $OAR_NODEFILE > nodes
 
 SERVS=$(sort -u $OAR_NODEFILE)
-MASTER=$(tail -n 1 $OAR_NODEFILE)
+SSH=$(tail -n 1 $OAR_NODEFILE)
 
 
 # for each node
@@ -60,7 +63,7 @@ done
 
 
 
-ssh root@$MASTER
+ssh root@$SSH
 
 
 cd ~
@@ -73,7 +76,13 @@ cd ~/charm-6.7.1
 git clone ssh://lgout@depots.ensimag.fr/depots/2016/BDFG_SDCA/TP_SDCA.git ~/make
 
 
+# Step 3
+# change ftp password in test/bench.sh
+vim ~/make/test/bench.sh
 
+
+
+# Step 4
 cd ~/make/src
 
 # Fix Charm++ path
@@ -106,10 +115,6 @@ done
 #../../../src/charmrun ++nodelist ~/nodelist ++ppn 2 ++p 60  ../../../src/Make Makefile
 
 cd ~/make
-
-# change ftp password in test/bench.sh first
-vim ~/make/test/bench.sh
-
 
 
 nohup ./test/bench.sh &> bench.log &

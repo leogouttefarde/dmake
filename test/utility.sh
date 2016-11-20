@@ -72,11 +72,17 @@ nCPU = $3
 STEP = $2
 
 #x_axis <- seq.int( nCPU, STEP, -STEP )
-x_axis <- seq.int( STEP, nCPU, STEP )
+#x_axis <- seq.int( STEP, nCPU, STEP )
+x_axis=c()
+for (i in seq(from=nCPU, to=1, by=-STEP)) {
+  x_axis = c( x_axis, i )
+}
 
 if ( ! (1 %in% x_axis) ) {
-  x_axis = c( 1, x_axis )
+  x_axis = c( x_axis, 1 )
 }
+
+x_axis = rev(x_axis)
 
 EOF
     local SIZE=$(nb_iterations $3 $2)
