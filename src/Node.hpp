@@ -31,6 +31,8 @@ public:
 
 	bool setDone();
 
+    bool needToBeBuilt();
+
 	const std::vector<Node*>& getDeps();
 
 	const std::vector<Node*>& getFathers();
