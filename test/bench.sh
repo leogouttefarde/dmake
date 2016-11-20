@@ -125,7 +125,7 @@ mkdir -p $FOLDER
 # mv ${TMPLOG} $FOLDER/${LOGFILE} &> /dev/null
 mv ${RFOLDER}/*.{R,pdf} $FOLDER &> /dev/null
 
-zip history.zip -r history bench.log sujet/makefiles/*/out_Makefile*.txt &> /dev/null
+zip history.zip -r history bench.log sujet/makefiles/*/out_Makefile*.txt ~/nodes &> /dev/null
 
 # FTP settings
 FTPU="gouttefarde"
