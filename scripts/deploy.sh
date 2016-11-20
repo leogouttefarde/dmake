@@ -29,10 +29,11 @@ remote_run()
 # Charm++ nodelist file (regenerate it after each oarsub node allocation)
 NODELIST=~/nodelist
 
+sort -u $OAR_NODEFILE > nodes
+
 # Generates Charm++ nodelist file
 # each line from $OAR_NODEFILE = 1 cpu entry, usually 8 / node
-awk '$0="\thost "$0" ++cpus 8"' $OAR_NODEFILE > $NODELIST
-sort -u $NODELIST > tmp
+awk '$0="\thost "$0" ++cpus 8"' nodes > tmp
 echo "group main" > $NODELIST
 cat tmp >> $NODELIST
 rm tmp
@@ -41,10 +42,8 @@ rm tmp
 echo -e "apt-get update\napt-get -y install blender ffmpeg ImageMagick ncftp" > task.sh
 echo -e "nohup sh ~/task.sh &> out.txt &" > runTask.sh
 
-sort -u $OAR_NODEFILE > nodes
-
-SERVS=$(sort -u $OAR_NODEFILE)
-SSH=$(tail -n 1 $OAR_NODEFILE)
+SERVS=$(cat nodes)
+SSH=$(tail -n 1 nodes)
 
 
 # for each node

@@ -80,7 +80,7 @@ for mfile in Makefile* ; do
 
       # TIME=$(echo -e "${OUT}" | tail -1)
       TIME=$(echo -e "${OUT}" | tail -2 | head -1)
-      echo -e "${OUT}" > out_$mfile_$nNODES.txt
+      echo -e "${OUT}" > out_$mfile-$nNODES.txt
 
       echo "Time : $TIME ms"
       # echo "NN : $((((nProcs / THSTEP)/ NSTEP) - 1))"
