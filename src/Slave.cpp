@@ -25,7 +25,7 @@ void Slave::ExecuteCmds(const std::vector<std::string>& cmds)
 
 void Slave::run(Job &job)
 {
-	CkPrintf("Slave #%d : run %s\n", CkMyPe(), job.mTarget.c_str());
+	CkPrintf("Slave %d from proc #%d : run %s\n", thisIndex, CkMyPe(), job.mTarget.c_str());
 
 	// Write received dependencies
 	job.writeDeps();

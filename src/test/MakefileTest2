@@ -6,7 +6,7 @@ matrix: dep1 dep2 dep3 dep4
 
 dep1:
 	echo lolDep > lol
-dep2:
+dep2: dep4
 	echo lolDep2 > lol2
 	echo lolDep2 >> lol2
 dep3: dep4

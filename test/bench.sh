@@ -80,7 +80,7 @@ for mfile in Makefile* ; do
 
       # TIME=$(echo -e "${OUT}" | tail -1)
       TIME=$(echo -e "${OUT}" | tail -2 | head -1)
-      echo -e "${OUT}" > out_$mfile.txt
+      echo -e "${OUT}" > out_$mfile_$nNODES.txt
 
       echo "Time : $TIME ms"
       # echo "NN : $((((nProcs / THSTEP)/ NSTEP) - 1))"
@@ -125,7 +125,7 @@ mkdir -p $FOLDER
 # mv ${TMPLOG} $FOLDER/${LOGFILE} &> /dev/null
 mv ${RFOLDER}/*.{R,pdf} $FOLDER &> /dev/null
 
-zip history.zip -r history &> /dev/null
+zip history.zip -r history bench.log sujet/makefiles/*/out_Makefile*.txt &> /dev/null
 
 # FTP settings
 FTPU="gouttefarde"

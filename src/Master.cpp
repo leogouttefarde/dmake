@@ -5,6 +5,9 @@
 /*readonly*/ CProxy_Slave slaveArray;
 /*readonly*/ int nSlaves;
 
+std::list<int> freeSlaves;
+std::vector<std::map<Node*,bool>> filesMap;
+
 Master::Master(CkArgMsg *m)
 {
 	CkPrintf("Master creation with #%d processor(s)\n", CkNumPes());
@@ -27,7 +30,7 @@ Master::Master(CkArgMsg *m)
 		}
 
 		if ( !success ) {
-			this->exit();
+			CkExit();
 		}
 
 		CkPrintf("Fin de la construction de l'arbre\n");
@@ -37,13 +40,14 @@ Master::Master(CkArgMsg *m)
 
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
+		filesMap.resize( nSlaves );
 
 		CkPrintf("%d slaves created\n", nSlaves);
 
 	} else {
 		// target = "Makefile";
 		CkPrintf("Usage : %s <MakefilePath>\n", m->argv[0]);
-		this->exit();
+		CkExit();
 	}
 }
 
@@ -58,7 +62,19 @@ void Master::exit()
 	CkExit();
 }
 
-std::list<int> freeSlaves;
+void getMissingDeps(
+	const std::vector<Node*>& deps,
+	std::map<Node*,bool>& sent,
+	std::vector<Node*>& oMissing)
+{
+	for (Node *dep : deps) {
+
+		if (!sent.count(dep)) {
+			oMissing.push_back(dep);
+			sent[dep] = true;
+		}
+	}
+}
 
 void Master::runJobs()
 {
@@ -75,7 +91,10 @@ void Master::runJobs()
 		int idx = freeSlaves.front();
 		freeSlaves.pop_front();
 
-		Job job( task );
+		std::vector<Node*> deps;
+		getMissingDeps(task->getDeps(), filesMap[idx], deps);
+
+		Job job( task->getName(), task->getCmds(), deps );
 
 		CkPrintf("slaveArray[%d].run\n", idx);
 		slaveArray[idx].run( job );

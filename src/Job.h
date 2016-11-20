@@ -14,13 +14,15 @@ public:
 	Job() {
 	}
 
-	Job(Node *target) {
+	Job(std::string target,
+		const std::vector<std::string>& cmds,
+		std::vector<Node*>& deps) {
 
-		mTarget = target->getName();
-		mCmds = target->getCmds();
+		mTarget = target;
+		mCmds = cmds;
 
 		// Read all deps
-		for (Node *dep : target->getDeps()) {
+		for (Node *dep : deps) {
 
 			File file( dep->getName() );
 			mDeps.push_back( file );
