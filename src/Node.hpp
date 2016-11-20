@@ -6,6 +6,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <boost/optional.hpp>
 
 
 class Node {
@@ -30,6 +31,8 @@ public:
 
 	void setDone();
 
+    bool needToBeBuilt();
+
 	const std::vector<Node*>& getDeps();
 
 	const std::vector<Node*>& getFathers();
@@ -42,7 +45,7 @@ public:
 
 	int 						mDepth;
 	int 						mNbUnfinishedSons;
-	bool	 					mNeedToBeBuilt;
+        boost::optional<bool>	 			mNeedToBeBuilt;
 private:
 	std::string 				mName;
 
