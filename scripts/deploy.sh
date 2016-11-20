@@ -1,8 +1,12 @@
 # Script de déploiement par réinstallation des noeuds
 # et installation des librairies requises
 
+ssh lgouttefarde@access.grid5000.fr
+ssh sophia
+
+
 # Dure quelques secondes
-oarsub -I -l nodes=40,walltime=2:00 -t deploy
+oarsub -I -l nodes=40,walltime=4:00 -t deploy
 
 
 # Assez long (2-3 minutes)
@@ -37,7 +41,7 @@ echo -e "nohup sh ~/task.sh &> out.txt &" > runTask.sh
 sort -u $OAR_NODEFILE > nodes
 
 SERVS=$(sort -u $OAR_NODEFILE)
-MASTER=$(head -n 1 $OAR_NODEFILE)
+MASTER=$(tail -n 1 $OAR_NODEFILE)
 
 
 # for each node
@@ -86,6 +90,8 @@ gcc premier.c -lm -o premier
 cd ~
 
 
+
+
 # for each node
 for SERV in $(cat ~/nodes); do
 
@@ -100,6 +106,11 @@ done
 #../../../src/charmrun ++nodelist ~/nodelist ++ppn 2 ++p 60  ../../../src/Make Makefile
 
 cd ~/make
+
+# change ftp password in test/bench.sh first
+vim ~/make/test/bench.sh
+
+
 
 nohup ./test/bench.sh &> bench.log &
 

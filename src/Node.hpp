@@ -28,7 +28,7 @@ public:
 
 	bool isDone();
 
-	bool setDone();
+	void setDone();
 
 	const std::vector<Node*>& getDeps();
 

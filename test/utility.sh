@@ -63,21 +63,29 @@ array_get()
 data_init()
 {
   if [ $# -ge 3 ]; then
-    BASENAME=$(basename $1)
+    local BASENAME=$(basename $1)
 
     cat > "${1}".R <<EOF
 pdf("$BASENAME.pdf")
 
 nCPU = $3
-
 STEP = $2
 
 #x_axis <- seq.int( nCPU, STEP, -STEP )
 x_axis <- seq.int( STEP, nCPU, STEP )
 
-EOF
+if ( ! (1 %in% x_axis) ) {
+  x_axis = c( 1, x_axis )
+}
 
-    array_set_size $(nb_iterations $3 $2)
+EOF
+    local SIZE=$(nb_iterations $3 $2)
+
+    if [ $2 -ne 1 ]; then
+      SIZE=$((SIZE+1))
+    fi
+
+    array_set_size $SIZE
   fi;
 }
 
@@ -128,12 +136,12 @@ data = data / 1000
 
 #sCPU = tail(data, n=1)
 
-xLim = 2 * nCPU / 3
+xLim = 4 * nCPU / 7
 sCPU = head(data, n=1)
 yLim = sCPU + sCPU / 100
 
-x_ideal <- c( STEP, nCPU )
-y_ideal <- c( sCPU, STEP * sCPU / nCPU )
+x_ideal <- c( 1, nCPU )
+y_ideal <- c( sCPU, sCPU / nCPU )
 y_lims <- c( min(data), yLim )
 
 plot( x_axis, data, pch="+", type="o", col="dark blue", ann=FALSE, ylim=y_lims )

@@ -66,17 +66,18 @@ for mfile in Makefile* ; do
     RFILE="../../../$RFOLDER"/"$NAME"_nth$nTHREADS
 
     data_init "${RFILE}" $NSTEP $mNODES
+    idx=$((DATA_SIZE-1))
 
     # Perform both hardware and software compression / decompression
     # for ((nNODES=1; nNODES < mNODES; nNODES++)); do
-    for ((nNODES=$mNODES; nNODES>0; nNODES-=NSTEP)); do
+    for ((nNODES=mNODES; nNODES>0; nNODES-=NSTEP)); do
 
       nProcs=$((nNODES * nTHREADS))
 
       echo "nTHREADS : $nTHREADS, nNODES : $nNODES, nProcs : $nProcs"
 
       # pwd
-      # OUT="46\n777" # test
+      # OUT="$nNODES\n777" # test
       OUT=$(../../../src/charmrun ../../../src/Make $mfile ++nodelist ~/nodelist ++ppn ${nTHREADS} ++p ${nProcs} 2>/dev/null)
 
       # TIME=$(echo -e "${OUT}" | tail -1)
@@ -86,7 +87,13 @@ for mfile in Makefile* ; do
       echo "Time : $TIME ms"
       # echo "NN : $((((nProcs / THSTEP)/ NSTEP) - 1))"
 
-      array_set $((((nProcs / THSTEP)/ NSTEP) - 1)) $TIME
+      array_set $idx $TIME
+      idx=$((idx-1))
+
+      # Force un dernier calcul avec 1 seul noeud
+      if ((nNODES > 1 && nNODES <= NSTEP)); then
+      	nNODES=$((NSTEP + 1))
+      fi
 
     done
 

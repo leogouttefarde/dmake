@@ -32,7 +32,7 @@ bool Node::isDone() {
 	return mIsDone;
 }
 
-bool Node::setDone() {
+void Node::setDone() {
 	mIsDone = true;
 }
 
