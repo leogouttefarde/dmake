@@ -13,6 +13,7 @@ using namespace boost::filesystem;
 Node::Node(const std::string name, bool isDone) {
 	mName = name;
 	mIsDone = isDone;
+	mDepsOk = false;
 }
 
 std::string Node::getName() {
@@ -39,7 +40,7 @@ bool Node::isDone() {
 	return mIsDone;
 }
 
-bool Node::setDone() {
+void Node::setDone() {
 	mIsDone = true;
 }
 
@@ -114,12 +115,17 @@ bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
 
 	bool success = true;
 
-	std::cout << "setDeps IN " << std::endl;
+	// Process each node only one time
+	if ( mDepsOk ) {
+		return success;
+	}
+
+	//std::cout << "setDeps IN " << std::endl;
 
 	for (std::string name : mDepNames) {
 
 		// Parcours des dépendances
-		std::cerr << "for " << name << std::endl;
+		//std::cerr << "for " << name << std::endl;
 
 		Node *dep = targets[name];
 
@@ -161,6 +167,8 @@ bool Node::setDeps( std::list<Node*>& nodes, std::list<Node*>& leaves,
 		// Add highest deps at the end
 		nodes.push_back(this);
 	}
+
+	mDepsOk = true;
 
 	return success;
 }

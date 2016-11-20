@@ -7,42 +7,42 @@
 class Job {
 
 public:
-  std::string mTarget;
+	std::string mTarget;
 	std::vector<File> mDeps;
-  std::vector<std::string> mCmds;
+	std::vector<std::string> mCmds;
 
-  Job() {
-  }
+	Job() {
+	}
 
-  Job(Node *target) {
+	Job(Node *target) {
 
-    mTarget = target->getName();
-    mCmds = target->getCmds();
+		mTarget = target->getName();
+		mCmds = target->getCmds();
 
-    // Read all deps
-    for (Node *dep : target->getDeps()) {
+		// Read all deps
+		for (Node *dep : target->getDeps()) {
 
-      File file( dep->getName() );
-      mDeps.push_back( file );
-    }
+			File file( dep->getName() );
+			mDeps.push_back( file );
+		}
 
-  }
+	}
 
-  ~Job() {
-  }
+	~Job() {
+	}
 
-  void writeDeps() {
+	void writeDeps() {
 
-    for (File& file : mDeps) {
-      file.write();
-    }
-  }
+		for (File& file : mDeps) {
+			file.write();
+		}
+	}
 
-  void pup(PUP::er &p) {
-    p|mTarget;
-  	p|mDeps;
-    p|mCmds;
-  }
+	void pup(PUP::er &p) {
+		p|mTarget;
+		p|mDeps;
+		p|mCmds;
+	}
 
 
 private:

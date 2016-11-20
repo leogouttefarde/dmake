@@ -12,10 +12,14 @@ Slave::Slave()
 
 void Slave::ExecuteCmds(const std::vector<std::string>& cmds)
 {
-	for (const std::string& cmd : cmds) {
+	// Execute each command
+	for ( const std::string& cmd : cmds ) {
+
 		system(cmd.c_str());
+
 		std::cout << "Processor #" << CkMyPe()
 			<< " executed '" << cmd << "'" << std::endl;
+
 	}
 }
 
@@ -23,18 +27,16 @@ void Slave::run(Job &job)
 {
 	CkPrintf("Slave #%d : run %s\n", CkMyPe(), job.mTarget.c_str());
 
-	//file = job.gen()
+	// Write received dependencies
 	job.writeDeps();
 
-    // job.mTarget
+	// Execute target commands
 	ExecuteCmds(job.mCmds);
 
+	// Read generated target
 	File target(job.mTarget);
-	// CkPrintf("job.data = %d\n", job.data);
 
-	masterProxy.finishJob(target);
-
-	// todo : autosend new job from finishJob'end instead
-	masterProxy.requestJob(thisIndex);
+	// Finish job
+	masterProxy.finishJob(thisIndex, target);
 }
 

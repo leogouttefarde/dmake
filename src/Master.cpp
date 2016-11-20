@@ -1,6 +1,5 @@
 
 #include "Master.hpp"
-#include <chrono>
 
 /*readonly*/ CProxy_Master masterProxy;
 /*readonly*/ CProxy_Slave slaveArray;
@@ -9,7 +8,6 @@
 Master::Master(CkArgMsg *m)
 {
 	CkPrintf("Master creation with #%d processor(s)\n", CkNumPes());
-	// init all
 	const char *target = NULL;
 
 	masterProxy = thisProxy;
@@ -29,11 +27,13 @@ Master::Master(CkArgMsg *m)
 		}
 
 		if ( !success ) {
-			CkExit();
+			this->exit();
 		}
 
 		CkPrintf("Fin de la construction de l'arbre\n");
 		// printf("target = %s\n", target);
+
+		mStart = std::chrono::high_resolution_clock::now();
 
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
@@ -43,35 +43,60 @@ Master::Master(CkArgMsg *m)
 	} else {
 		// target = "Makefile";
 		CkPrintf("Usage : %s <MakefilePath>\n", m->argv[0]);
-		CkExit();
+		this->exit();
 	}
+}
+
+void Master::exit()
+{
+	auto end = std::chrono::high_resolution_clock::now();
+
+	std::cout << std::endl << "Elapsed time (ms) :" << std::endl <<
+		std::chrono::duration_cast<std::chrono::milliseconds>(end-mStart).count()
+		<< std::endl;
+
+	CkExit();
 }
 
 std::list<int> freeSlaves;
 
+void Master::runJobs()
+{
+	Node *task = NULL;
+
+	while ( !freeSlaves.empty() && (task = nextTask()) ) {
+
+		// Empty tasks finish instantly
+		if ( task->getCmds().size() == 0 ) {
+			task->setDone();
+			continue;
+		}
+
+		int idx = freeSlaves.front();
+		freeSlaves.pop_front();
+
+		Job job( task );
+
+		CkPrintf("slaveArray[%d].run\n", idx);
+		slaveArray[idx].run( job );
+		CkPrintf("slaveArray[%d].run done\n", idx);
+	}
+
+	// Exit when nothing left to do
+	if (freeSlaves.size() == nSlaves) {
+		this->exit();
+	}
+}
+
 void Master::requestJob(int iSlave)
 {
 	CkPrintf("Master::requestJob\n");
-	CkPrintf("slaveArray[%d].run\n", iSlave);
 
-	Node *task = nextTask();
-
-	if (task != NULL) {
-		Job job( task );
-		slaveArray[iSlave].run( job );
-	}
-	else {
-		freeSlaves.push_back(iSlave);
-
-		if (freeSlaves.size() == nSlaves) {
-			CkExit();
-		}
-	}
-
-	CkPrintf("slaveArray[%d].run done\n", iSlave);
+	freeSlaves.push_back(iSlave);
+	runJobs();
 }
 
-void Master::finishJob(File &target)
+void Master::finishJob(int iSlave, File &target)
 {
 	CkPrintf("finishJob\n");
 
@@ -86,6 +111,9 @@ void Master::finishJob(File &target)
 	else {
 		std::cout << "An unknown job just finished" << std::endl;
 	}
+
+	freeSlaves.push_back(iSlave);
+	runJobs();
 }
 
 Node* Master::nextTask() {
@@ -103,6 +131,8 @@ Node* Master::nextTask() {
 			if ( node->isReady() ) {
 				mTasks.push_back(node);
 				it = mNodes.erase(it);
+
+				CkPrintf("New task ready : %s\n", node->getName().c_str());
 			}
 
 			// Only increment when current
@@ -123,10 +153,15 @@ Node* Master::nextTask() {
 		jTask = mTasks.front();
 		mTasks.pop_front();
 
+		CkPrintf("\nNext task : %s\n", jTask->getName().c_str());
+
 		// Run last job directly from master
 		if ( jTask != NULL && mNodes.empty() && mTasks.empty() ) {
 			Slave::ExecuteCmds( jTask->getCmds() );
 			jTask = NULL;
+
+			// Exit after last job
+			this->exit();
 		}
 	}
 

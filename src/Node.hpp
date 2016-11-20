@@ -29,7 +29,7 @@ public:
 
 	bool isDone();
 
-	bool setDone();
+	void setDone();
 
     bool needToBeBuilt();
 
@@ -56,5 +56,7 @@ private:
 	std::vector<std::string> 	mCmds;
 
 	bool	 					mIsDone;
+
+	bool	 					mDepsOk;
 };
 

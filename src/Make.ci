@@ -11,7 +11,7 @@ mainmodule Make {
 	mainchare Master {
 		entry Master(CkArgMsg *m);
 		entry void requestJob(int iSlave);
-		entry void finishJob(File &target);
+		entry void finishJob(int iSlave, File &target);
 	};
 
 
