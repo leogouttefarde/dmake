@@ -10,7 +10,7 @@ OBJSPARSER = Parseur.o
 all: Make
 
 Make: $(OBJS)
-	$(CHARMC) -language charm++ -g -o $@ $(OBJS)
+	$(CHARMC) -language charm++ -g -lboost_filesystem-mt -lboost_system -o $@ $(OBJS)
 
 Make.decl.h: Make.ci Job.h File.h
 	$(CHARMC) Make.ci
@@ -28,5 +28,5 @@ Parser.o: Parser.cpp Parser.hpp
 	$(CHARMC) -g -c Parser.cpp
 
 Node.o: Node.cpp Node.hpp
-	$(CHARMC) -g -c Node.cpp
+	$(CHARMC) -g -c -lboost_system -lboost_filesystem-mt Node.cpp
 
