@@ -34,5 +34,7 @@ private:
 
 	std::chrono::_V2::system_clock::time_point mStart;
 
+	std::vector<std::map<Node*,bool>> mFilesMap;
+
 };
 

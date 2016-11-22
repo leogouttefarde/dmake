@@ -6,7 +6,6 @@
 /*readonly*/ int nSlaves;
 
 std::list<int> freeSlaves;
-std::vector<std::map<Node*,bool>> filesMap;
 
 Master::Master(CkArgMsg *m)
 {
@@ -15,6 +14,8 @@ Master::Master(CkArgMsg *m)
 
 	masterProxy = thisProxy;
 	nSlaves = CkNumPes();
+
+	mFilesMap.resize( nSlaves );
 
 	if (m->argc > 1) {
 		target = m->argv[1];
@@ -36,7 +37,6 @@ Master::Master(CkArgMsg *m)
 
 		// chare array construction
 		slaveArray = CProxy_Slave::ckNew(nSlaves);
-		filesMap.resize( nSlaves );
 
 		CkPrintf("%d slaves created\n", nSlaves);
 
@@ -88,12 +88,17 @@ void Master::runJobs()
 		freeSlaves.pop_front();
 
 		std::vector<Node*> deps;
-		getMissingDeps(task->getDeps(), filesMap[idx], deps);
+		const int iNode = CkNodeOf(idx);
+
+		// If not on master node, find all missing deps to send
+		if ( iNode > 0 ) {
+			getMissingDeps(task->getDeps(), mFilesMap[ idx ], deps);
+		}
 
 		Job job( task->getName(), task->getCmds(), deps );
 
 		CkPrintf("slaveArray[%d].run\n", idx);
-		slaveArray[idx].run( job );
+		slaveArray[ idx ].run( job );
 		CkPrintf("slaveArray[%d].run done\n", idx);
 	}
 

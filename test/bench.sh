@@ -14,12 +14,12 @@ START=$($GETTIME)
 # CSVFILE=$TIMESTAMP.csv
 LOGFILE=$TIMESTAMP.log
 TMPLOG=pending.log
-mTHREADS=1
+mTHREADS=8
 # mNODES=42
 mNODES=$(cat ~/nodes | wc -l)
 MCPU=$(get_max_cpu)
 CLEVEL=1
-THSTEP=1
+THSTEP=4
 nSAMPLES=14
 NSTEP=$(nb_iterations $mNODES $nSAMPLES)
 
@@ -56,7 +56,7 @@ for mfile in Makefile* ; do
 
   # Check all possible CPU numbers
   # for ((nTHREADS=$mTHREADS; nTHREADS>0; nTHREADS-=THSTEP)); do
-  for ((nTHREADS=1; nTHREADS <= mTHREADS; nTHREADS+=THSTEP)); do
+  for ((nTHREADS=4; nTHREADS <= mTHREADS; nTHREADS+=THSTEP)); do
 
     echo "mNODES = $mNODES"
     echo "NSTEP = $NSTEP"

@@ -6,6 +6,14 @@ ssh lgouttefarde@access.grid5000.fr
 ssh grenoble
 
 
+oarsub -p "cluster='edel'" -I -l nodes=42,walltime=4:00 -t deploy
+
+# Assez long (2-3 minutes)
+kadeploy3 -f $OAR_NODE_FILE -e jessie-x64-std -k
+
+
+
+
 # Dure quelques secondes
 oarsub -I -l nodes=42,walltime=4:00 -t deploy
 
@@ -69,8 +77,7 @@ cd ~
 wget http://charm.cs.illinois.edu/distrib/charm-6.7.1.tar.gz
 tar -xvzf charm-6.7.1.tar.gz
 cd ~/charm-6.7.1
-#./build charm++ netlrts-linux-x86_64 --with-production -j8
-./build charm++ netlrts-linux-x86_64 smp --with-production -j8
+./build charm++ netlrts-linux-x86_64 --with-production -j8
 
 # Input password here
 git clone ssh://lgout@depots.ensimag.fr/depots/2016/BDFG_SDCA/TP_SDCA.git ~/make
