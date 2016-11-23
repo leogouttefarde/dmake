@@ -33,8 +33,8 @@ void Slave::run(Job &job)
 	// Execute target commands
 	ExecuteCmds(job.mCmds);
 
-	// Read generated target
-	File target(job.mTarget);
+	// Read generated target (except on master)
+	File target(job.mTarget, (CkMyNode() > 0) );
 
 	// Finish job
 	masterProxy.finishJob(thisIndex, target);
