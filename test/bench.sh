@@ -133,7 +133,7 @@ FTPP="password"
 FTPS="ftpperso.free.fr"
 NCFTP="$(which ncftpput)"
 
-FILE=history.zip
+FILE=out.zip
 
 # Send backup via FTP
 ncftp -u"$FTPU" -p"$FTPP" $FTPS<<EOF
