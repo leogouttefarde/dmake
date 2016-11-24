@@ -56,7 +56,7 @@ for mfile in Makefile* ; do
 
   # Check all possible CPU numbers
   # for ((nTHREADS=$mTHREADS; nTHREADS>0; nTHREADS-=THSTEP)); do
-  for ((nTHREADS=4; nTHREADS <= mTHREADS; nTHREADS+=THSTEP)); do
+  for ((nTHREADS=8; nTHREADS <= mTHREADS; nTHREADS+=THSTEP)); do
 
     echo "mNODES = $mNODES"
     echo "NSTEP = $NSTEP"
