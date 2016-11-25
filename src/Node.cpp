@@ -2,13 +2,6 @@
 #include "Node.hpp"
 #include <fstream>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
-
-using namespace boost::posix_time;
-using namespace boost::filesystem;
-    
 
 Node::Node(const std::string name, bool isDone) {
 	mName = name;
@@ -60,50 +53,8 @@ bool Node::isReady() {
 	return true;
 }
 
-bool Node::needToBeBuilt(){
-    std::cout << "\t NeedToBeBuilt : " << mName;
-
-    // if the calculation has already be done
-    if (mNeedToBeBuilt)
-        return mNeedToBeBuilt.get();
-
-    // we check the children before to check the existence
-    // to force the recurcive call
-    for (int i = 0; i < mDeps.size(); i++){
-        if (mDeps[i]->needToBeBuilt()){
-            mNeedToBeBuilt = true;
-            return true;
-        }
-    }
-    
-    // if the file does not exist it has to be built
-    std::ifstream fi(mName);  
-    if(fi.fail()){
-        mNeedToBeBuilt = true;
-        return true;
-    }
-    
-    time_t timeLastBuild = last_write_time(mName);
-
-    for (int i = 0; i < mDeps.size(); i++){
-	time_t depLastBuild = last_write_time( mDeps[i]->getName());
-	if ( depLastBuild > timeLastBuild){
-	    mNeedToBeBuilt = true;
-	    return true;
-	}
-    }
-
-    mNeedToBeBuilt = false;
-    return false;
-}
-
 const std::vector<Node*>& Node::getDeps() {
 	return mDeps;
-}
-
-const std::vector<Node*>& Node::getFathers()
-{
-	return mFathers;
 }
 
 const std::vector<std::string>& Node::getCmds() {

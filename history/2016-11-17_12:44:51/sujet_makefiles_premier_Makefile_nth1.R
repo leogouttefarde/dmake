@@ -45,3 +45,57 @@ lwd=c(2.5,2.5),col=c("cyan", "blue"),bg="white")
 
 
 dev.off()
+
+m = nCPU
+
+T1 = sCPU
+
+Tm = data
+
+acc = T1 / Tm
+
+
+travail=c()
+for (i in 1:length(data)) {
+  travail = c( travail, x_axis[i] * Tm[i] )
+}
+
+eff=T1/travail
+
+
+
+prefix="graphe"
+
+pdf(paste(prefix,"_acc.pdf", sep=""))
+
+plot( x_axis, acc, pch="+", cex=1.2, type="o", col="dark blue", ann=FALSE ) #, ylim=y_lims )
+
+title( main="Accélération", font.main=1, cex.main=2 )
+title( xlab="Nombre de machines", cex.lab=1.2 )
+title( ylab="Accélération", cex.lab=1.2 )
+
+dev.off()
+
+
+
+pdf(paste(prefix,"_eff.pdf", sep=""))
+
+plot( x_axis, eff, pch="+", cex=1.2, type="o", col="dark blue", ann=FALSE ) #, ylim=y_lims )
+
+title( main="Efficacité", font.main=1, cex.main=2 )
+title( xlab="Nombre de machines", cex.lab=1.2 )
+title( ylab="Efficacité", cex.lab=1.2 )
+
+dev.off()
+
+
+pdf(paste(prefix,"_work.pdf", sep=""))
+
+plot( x_axis, travail, pch="+", cex=1.2, type="o", col="dark blue", ann=FALSE ) #, ylim=y_lims )
+
+title( main="Travail", font.main=1, cex.main=2 )
+title( xlab="Nombre de machines", cex.lab=1.2 )
+title( ylab="Travail", cex.lab=1.2 )
+
+dev.off()
+
