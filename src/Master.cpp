@@ -30,8 +30,7 @@ Master::Master(CkArgMsg *m)
 			CkExit();
 		}
 
-		CkPrintf("Fin de la construction de l'arbre\n");
-		// printf("target = %s\n", target);
+		// CkPrintf("target = %s\n", target);
 
 		mStart = std::chrono::high_resolution_clock::now();
 

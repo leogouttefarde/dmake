@@ -78,12 +78,218 @@
 \tableofcontents
 \newpage
 
-\section {Présentation}
+\section {Présentation du projet}
+
+\subsection {Langage / Framework}
+
+Le projet a été réalisé à l'aide du framework Charm\texttt{++}, qui s'utilise en C\texttt{++}.
+Il s'agit d'un framework très complet du même type que Qt mais pour permettre de créer des applications distribuées et multi-coeurs.
+
+Pour cela le framework est basé sur une gestion de l'application par objets distribués et méthodes d'objet distantes, dont la spécification doit être faite dans un format de fichier d'interface dédié (fichiers .ci).
+Le framework utilise ainsi un compilateur spécifique.
+
+
+\subsection {Architecture}
+
+Le projet s'organise autour de différentes classes :
+
+\begin{itemize}
+
+\item[$-$]
+\lstinline!Parser! :
+Effectue le parsing du Makefile
+
+\item[$-$]
+\lstinline!Master! :
+Classe de l'objet distribué principal, le maître
+
+Il gère des esclaves, leur transmet des tâches,
+et récupère les résultats
+
+\item[$-$]
+\lstinline!Slave! :
+Classe des objets distribués d'esclaves
+
+Les esclaves reçoivent des tâches du maître qu'ils doivent exécuter,
+puis en revoyer le résultat
+
+\item[$-$]
+\lstinline!Node! :
+Classe des noeuds du graphe de dépendances tiré d'un Makefile
+
+Cette classe permet de gérer les différentes opérations faites sur les noeuds, elle permet aussi de créer le graphe des dépendances à partir des éléments parsés
+
+
+\item[$-$]
+\lstinline!Job! :
+Cette classe décrit les tâches envoyées à distance aux esclaves
+
+
+\item[$-$]
+\lstinline!File! :
+Cette classe décrit les fichier à envoyer entre objets distribués,
+elle définit leur lecture / écriture / transmission
+
+\end{itemize}
+
+
+\subsection {Algorithme principal}
+
+Le maître envoie des tâches aux esclaves, les esclaves une fois terminé renvoient leur résultat au maître qui regarde alors si une nouvelle tâche à exécuter est disponibles (donc dont toutes les dépendances sont créées).
 
 
 
+\subsection {Extensions}
 
-\newpage
+En plus des fonctionnalités de base, notre programme de make permet d'utiliser plusieurs CPUs par machine et minimise les envois de dépendances aux esclaves (on ne renvoie jamais une dépendance précédemment envoyée).
+
+De plus la dernière tâche est effectuée sur le maître pour en accélérer l'exécution (plus besoin de distribuer de tâches à ce moment là).
+
+
+\subsection {Installation}
+
+\noindent Pour installer Charm\texttt{++}, il faut en récupérer l'archive, la décompresser puis compiler :
+
+\begin{verbatim}
+cd ~
+wget http://charm.cs.illinois.edu/distrib/charm-6.7.1.tar.gz
+tar -xvzf charm-6.7.1.tar.gz
+cd ~/charm-6.7.1
+./build charm++ netlrts-linux-x86_64 --with-production -j8
+\end{verbatim}
+
+Sur Grid'5000, nous stockons ce dossier dans répertoire home et spécifions ce répertoire d'installation dans le Makefile.
+
+
+\subsection {Déploiement sur Grid'5000}
+
+Le code de déploiement est écrit en bash avec les différentes étapes décrites dans le fichier \noindent!scripts/deploy.sh!.
+
+Pour l'exécution distribuée, Charm\texttt{++} comporte un équivalent à mpiexec : charmrun.
+
+
+\subsubsection {Etape 1}
+
+Connexion, réservation et installation de 10 noeuds pour 1h par exemple (on installe notamment blender et ffmpeg) :
+
+\begin{verbatim}
+ssh <login>@access.grid5000.fr
+ssh <site>
+
+oarsub -I -l nodes=10,walltime=1 -t deploy
+kadeploy3 -f $OAR_NODE_FILE -e jessie-x64-std -k
+\end{verbatim}
+
+\subsubsection {Etape 2}
+
+Préparation des noeuds et installation de Charm\texttt{++} :
+
+\begin{verbatim}
+# runs a script remotely
+remote_run()
+{
+  if [[ $# -ge 2 && -f "$2" ]]; then
+    ssh -oStrictHostKeyChecking=no root@$1 'bash -s' < "$2"
+  fi
+}
+
+# Charm++ nodelist file (regenerate it after each oarsub node allocation)
+NODELIST=~/nodelist
+
+sort -u $OAR_NODEFILE > nodes
+
+# Generates Charm++ nodelist file
+# each line from $OAR_NODEFILE = 1 cpu entry, usually 8 / node
+awk '$0="\thost "$0" ++cpus 8"' nodes > tmp
+echo "group main" > $NODELIST
+cat tmp >> $NODELIST
+rm tmp
+
+echo -e "apt-get update\napt-get -y install blender ffmpeg ImageMagick ncftp" > task.sh
+echo -e "nohup sh ~/task.sh &> out.txt &" > runTask.sh
+
+SERVS=$(cat nodes)
+SSH=$(tail -n 1 nodes)
+
+# for each node
+for SERV in $SERVS; do
+
+  scp ~/.ssh/id_rsa root@$SERV:~/.ssh/id_rsa
+  scp ~/.ssh/id_rsa.pub root@$SERV:~/.ssh/id_rsa.pub
+
+  scp $NODELIST root@$SERV:~
+  scp nodes root@$SERV:~
+  scp task.sh root@$SERV:~
+
+  remote_run $SERV runTask.sh
+
+done
+
+ssh root@$SSH
+
+cd ~
+wget http://charm.cs.illinois.edu/distrib/charm-6.7.1.tar.gz
+tar -xvzf charm-6.7.1.tar.gz
+cd ~/charm-6.7.1
+./build charm++ netlrts-linux-x86_64 --with-production -j8
+\end{verbatim}
+
+
+
+\subsubsection {Etape 3}
+
+Içi il faut télécharger le code de l'application dans un dossier ~/make, puis changer les identifiants FTP dans test/bench.sh si l'on souhaite que les résultats soient zippés sur un FTP à la fin.
+
+
+\subsubsection {Etape 4}
+
+Il s'agit maintenant de compiler et de finaliser les noeuds avec les instructions suivantes :
+
+\begin{verbatim}
+cd ~/make/src
+
+# Fix Charm++ path
+tail -n +4 Makefile >> Makefile_
+echo "CPATH=~/charm-6.7.1" > Makefile
+cat Makefile_ >> Makefile
+
+make -j8
+
+
+cd ~/make/sujet/makefiles/premier
+gcc premier.c -lm -o premier
+cd ~
+
+# for each node
+for SERV in $(cat ~/nodes); do
+  scp -o StrictHostKeyChecking=no -rp ~/make root@$SERV:~
+done
+\end{verbatim}
+
+
+\subsubsection {Etape 5}
+
+Finalement pour lancer le benchmark de test il suffit d'utiliser l'instruction suivante :
+
+\begin{verbatim}
+cd ~/make
+nohup ./test/bench.sh &> bench.log &
+\end{verbatim}
+
+
+\subsubsection {Etape 5 (mode manuel)}
+
+Pour exécuter le programme sans le script de benchmarking, il faut se mettre dans le dossier du Makefile à tester puis appeler le programme comme ceci :
+
+\begin{verbatim}
+~/make/charmrun ++nodelist ~/nodelist ++ppn <Nombre de processus par noeud> \
+++p <Nombre de processus total> ~/make/src/Make <FichierMakefile>
+\end{verbatim}
+
+Le fichier \lstinline!~/nodelist! contient la liste des noeuds disponibles selon la syntaxe Charm\texttt{++} (créé en étape 2).
+
+
+% \newpage
 
 \section {Tests de performance}
 

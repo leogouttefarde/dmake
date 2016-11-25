@@ -31,11 +31,7 @@ public:
 
 	void setDone();
 
-    bool needToBeBuilt();
-
 	const std::vector<Node*>& getDeps();
-
-	const std::vector<Node*>& getFathers();
 
 	const std::vector<std::string>& getCmds();
 
@@ -43,14 +39,10 @@ public:
 					std::map<std::string, Node*>& targets);
 
 
-	int 						mDepth;
-	int 						mNbUnfinishedSons;
-        boost::optional<bool>	 			mNeedToBeBuilt;
 private:
 	std::string 				mName;
 
 	std::vector<Node*> 			mDeps;
-	std::vector<Node*> 			mFathers;
 
 	std::vector<std::string> 	mDepNames;
 	std::vector<std::string> 	mCmds;

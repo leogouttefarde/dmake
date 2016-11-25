@@ -155,10 +155,6 @@ Node* Parser::parseFile() {
 		} while ( pTarget != NULL );
 	}
 
-	// if ( first != NULL ) {
-	// Idéalement : finaliser l'arbre içi
-	// }
-
 	return first;
 }
 

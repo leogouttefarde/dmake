@@ -1,2 +1,3 @@
+
 test: test.o test2.o
 	cat test.o
