@@ -86,7 +86,8 @@ Le projet a été réalisé à l'aide du framework Charm\texttt{++}, qui s'utili
 Il s'agit d'un framework très complet du même type que Qt mais pour permettre de créer des applications distribuées et multi-coeurs.
 
 Pour cela le framework est basé sur une gestion de l'application par objets distribués et méthodes d'objet distantes, dont la spécification doit être faite dans un format de fichier d'interface dédié (fichiers .ci).
-Le framework utilise ainsi un compilateur spécifique.
+
+Le framework utilise ainsi un compilateur spécifique, et fonctionne sans aucune option spécifique sur les machines de l'Ensimag comme sur Grid'5000.
 
 
 \subsection {Architecture}
@@ -135,8 +136,7 @@ elle définit leur lecture / écriture / transmission
 
 \subsection {Algorithme principal}
 
-Le maître envoie des tâches aux esclaves, les esclaves une fois terminé renvoient leur résultat au maître qui regarde alors si une nouvelle tâche à exécuter est disponibles (donc dont toutes les dépendances sont créées).
-
+Le maître envoie des tâches aux esclaves, les esclaves une fois terminé renvoient leur résultat au maître qui regarde alors si une nouvelle tâche à exécuter est disponibles (donc dont toutes les dépendances sont créées). Nous n'utilisons pas NFS afin de supporter les machines qui n'ont pas NFS.
 
 
 \subsection {Extensions}
@@ -415,13 +415,18 @@ Voici quelques exemples des performances bien meilleures obtenues en exploitant 
 % \end{figure}
 \end{center}
 
-\subsection {Analyse}
+\subsection {Analyse sur les graphes}
 
 Les courbes expérimentales obtenues semblent être plutôt homogènes. Quelques points semblent néanmoins étranges puisqu'ils induisent une augmentation pour un point lorsque l'on attend une diminution. Cela peut s'expliquer par l'incertitude des mesures expérimentales. Cela peut également s'expliquer par l'une des extensions que nous avons réalisées : lorsque l'on envoie une tache à un esclave, on ne renvoie pas les dépendances qu'on lui a déjà précédemment envoyé. En rajoutant des machines on diminue la probabilité de renvoyer à un esclave une tache pour laquelle il a déjà reçu des dépendances ce qui augmente le temps réseau (cette optimisation est moins efficace dans ces cas-là, mais nous obtenons tout de même de meilleurs résultats qu'en ne l'implémentant pas).
 
 On remarque que les courbes expérimentales des temps d'exécution ont la même allure que les courbes théoriques (obtenues en divisant le temps obtenu avec une machine par le nombre de machines). Cependant, de gros écarts apparaissent et croissent avec le nombre de machines. Cela s'explique par le besoin d'envoyer les fichiers sur le réseau et donc par le fait de rajouter du temps d'envoi et de traitement à la fois des fichiers sources, mais aussi des réponses. On remarque que les temps finissent par stagner, souvent aux alentours de 20 machines, car passé ce nombre, il n'y a plus assez de tâches à distribuer et rajouter des esclaves ne fait plus gagner de temps puisque certains esclaves se retrouvent sans tâche à effectuer. En revanche, à partir d'une quarantaine de machines, la tendance est que les temps recommencent à augmenter, car il y a de nombreux esclaves qui demandent des temps de traitement et des temps d'envois réseaux importants (car l'optimisation qui consiste à ne pas renvoyer une dépendance déjà envoyée à un esclave ne marche plus).
 
-Les courbes d'efficacité nous semblent cohérentes, puisqu'elles sont toujours inférieurs à 1 et qu'elles sont décroissantes. Les courbes d'accélérations semblent également globalement cohérentes, puisque rajouter des machines permet d'augmenter l'accélération (représentant le temps gagné en distribuant le makefile plutôt qu'en l'exécutant en séquentiel). Les quelques irrégularités étant dues aux irrégularités des mesures. 
+Les courbes d'efficacité nous semblent cohérentes, puisqu'elles sont toujours inférieurs à 1 et qu'elles sont décroissantes. Les courbes d'accélérations semblent également globalement cohérentes, puisque rajouter des machines permet d'augmenter l'accélération (représentant le temps gagné en distribuant le makefile plutôt qu'en l'exécutant en séquentiel). Les quelques irrégularités étant dues aux irrégularités des mesures.  
+
+
+On remarque que l'utilisation de plusieurs coeurs par machine permet de gagner énormément de temps : on gagne en moyenne un facteur 2. Mais cela ne nous étonne pas car c'est ce que nous attendions.
+
+Nous remarquons que notre makefile permet de gagner énormément de temps en distribuant les tâches. En effet, entre la distribution des tâches, et l'utilisation de plusieurs coeurs, on a besoin de jusqu'à 6 fois moins de temps comparé à une exécution séquentielle par exemple pour l'exemple Premier.
 
 
 \end{document}
