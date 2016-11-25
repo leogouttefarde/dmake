@@ -86,7 +86,8 @@ Le projet a été réalisé à l'aide du framework Charm\texttt{++}, qui s'utili
 Il s'agit d'un framework très complet du même type que Qt mais pour permettre de créer des applications distribuées et multi-coeurs.
 
 Pour cela le framework est basé sur une gestion de l'application par objets distribués et méthodes d'objet distantes, dont la spécification doit être faite dans un format de fichier d'interface dédié (fichiers .ci).
-Le framework utilise ainsi un compilateur spécifique.
+
+Le framework utilise ainsi un compilateur spécifique, et fonctionne sans aucune option spécifique sur les machines de l'Ensimag comme sur Grid'5000.
 
 
 \subsection {Architecture}
@@ -135,8 +136,7 @@ elle définit leur lecture / écriture / transmission
 
 \subsection {Algorithme principal}
 
-Le maître envoie des tâches aux esclaves, les esclaves une fois terminé renvoient leur résultat au maître qui regarde alors si une nouvelle tâche à exécuter est disponibles (donc dont toutes les dépendances sont créées).
-
+Le maître envoie des tâches aux esclaves, les esclaves une fois terminé renvoient leur résultat au maître qui regarde alors si une nouvelle tâche à exécuter est disponibles (donc dont toutes les dépendances sont créées). Nous n'utilisons pas NFS afin de supporter les machines qui n'ont pas NFS.
 
 
 \subsection {Extensions}
