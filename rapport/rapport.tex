@@ -415,7 +415,7 @@ Voici quelques exemples des performances bien meilleures obtenues en exploitant 
 % \end{figure}
 \end{center}
 
-\subsection {Analyse sur les graphes}
+\subsection {Analyse des graphes}
 
 Les courbes expérimentales obtenues semblent être plutôt homogènes. Quelques points semblent néanmoins étranges puisqu'ils induisent une augmentation pour un point lorsque l'on attend une diminution. Cela peut s'expliquer par l'incertitude des mesures expérimentales. Cela peut également s'expliquer par l'une des extensions que nous avons réalisées : lorsque l'on envoie une tache à un esclave, on ne renvoie pas les dépendances qu'on lui a déjà précédemment envoyé. En rajoutant des machines on diminue la probabilité de renvoyer à un esclave une tache pour laquelle il a déjà reçu des dépendances ce qui augmente le temps réseau (cette optimisation est moins efficace dans ces cas-là, mais nous obtenons tout de même de meilleurs résultats qu'en ne l'implémentant pas).
 
