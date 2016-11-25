@@ -439,7 +439,12 @@ Les courbes expérimentales obtenues semblent être plutôt homogènes. Quelques
 
 On remarque que les courbes expérimentales des temps d'exécution ont la même allure que les courbes théoriques (obtenues en divisant le temps obtenu avec une machine par le nombre de machines). Cependant, de gros écarts apparaissent et croissent avec le nombre de machines. Cela s'explique par le besoin d'envoyer les fichiers sur le réseau et donc par le fait de rajouter du temps d'envoi et de traitement à la fois des fichiers sources, mais aussi des réponses. On remarque que les temps finissent par stagner, souvent aux alentours de 20 machines, car passé ce nombre, il n'y a plus assez de tâches à distribuer et rajouter des esclaves ne fait plus gagner de temps puisque certains esclaves se retrouvent sans tâche à effectuer. En revanche, à partir d'une quarantaine de machines, la tendance est que les temps recommencent à augmenter, car il y a de nombreux esclaves qui demandent des temps de traitement et des temps d'envois réseaux importants (car l'optimisation qui consiste à ne pas renvoyer une dépendance déjà envoyée à un esclave ne marche plus).
 
-Les courbes d'efficacité nous semblent cohérentes, puisqu'elles sont toujours inférieurs à 1 et qu'elles sont décroissantes. Les courbes d'accélérations semblent également globalement cohérentes, puisque rajouter des machines permet d'augmenter l'accélération (représentant le temps gagné en distribuant le makefile plutôt qu'en l'exécutant en séquentiel). Les quelques irrégularités étant dues aux irrégularités des mesures. 
+Les courbes d'efficacité nous semblent cohérentes, puisqu'elles sont toujours inférieurs à 1 et qu'elles sont décroissantes. Les courbes d'accélérations semblent également globalement cohérentes, puisque rajouter des machines permet d'augmenter l'accélération (représentant le temps gagné en distribuant le makefile plutôt qu'en l'exécutant en séquentiel). Les quelques irrégularités étant dues aux irrégularités des mesures.  
+
+
+On remarque que l'utilisation de plusieurs coeurs par machine permet de gagner énormément de temps : on gagne en moyenne un facteur 2. Mais cela ne nous étonne pas car c'est ce que nous attendions.
+
+Nous remarquons que notre makefile permet de gagner énormément de temps en distribuant les tâches. En effet, entre la distribution des tâches, et l'utilisation de plusieurs coeurs, on a besoin de jusqu'à 6 fois moins de temps comparé à une exécution séquentielle par exemple pour l'exemple Premier.
 
 
 \end{document}
