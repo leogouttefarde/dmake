@@ -324,9 +324,6 @@ Les caractéristiques de ces machines sont les suivantes :
 \begin{center}
 % \begin{figure}[ht!]
     \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth1.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth1_eff.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth1_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth1_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
@@ -337,9 +334,6 @@ Les caractéristiques de ces machines sont les suivantes :
 \begin{center}
 % \begin{figure}[ht!]
     \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile-recurse_nth1.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile-recurse_nth1_eff.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile-recurse_nth1_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile-recurse_nth1_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
@@ -351,9 +345,6 @@ Les caractéristiques de ces machines sont les suivantes :
 \begin{center}
 % \begin{figure}[ht!]
     \includegraphics[scale=0.45]{res/sujet_makefiles_blender_259_Makefile_nth1.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_259_Makefile_nth1_eff.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_259_Makefile_nth1_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_259_Makefile_nth1_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
@@ -365,9 +356,6 @@ Les caractéristiques de ces machines sont les suivantes :
 \begin{center}
 % \begin{figure}[ht!]
     \includegraphics[scale=0.45]{res/sujet_makefiles_matrix_Makefile_nth1.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_matrix_Makefile_nth1_eff.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_matrix_Makefile_nth1_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_matrix_Makefile_nth1_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
@@ -380,9 +368,6 @@ Les caractéristiques de ces machines sont les suivantes :
 \begin{center}
 % \begin{figure}[ht!]
     \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth1.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth1_eff.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth1_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth1_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
@@ -393,9 +378,6 @@ Les caractéristiques de ces machines sont les suivantes :
 \begin{center}
 % \begin{figure}[ht!]
     \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile-small_nth1.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile-small_nth1_eff.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile-small_nth1_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile-small_nth1_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
@@ -407,7 +389,7 @@ Les caractéristiques de ces machines sont les suivantes :
 
 \subsection {Tests multi-coeurs}
 
-Voici quelques exemples des performances bien meilleures obtenues en exploitant chacun des 8 coeurs (2 x 4 coeurs) disponibles par machine.
+Voici quelques exemples des performances bien meilleures obtenues en exploitant chacun des 8 coeurs (2 x 4 coeurs) disponibles par machine. Nous avons aussi rajouté les courbes d'efficacité et d'accélération pour ces deux exemples.
 
 \subsubsection {Blender 2.49 : Makefile}
 
@@ -416,7 +398,6 @@ Voici quelques exemples des performances bien meilleures obtenues en exploitant 
     \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth8.pdf}
     \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth8_eff.pdf}
     \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth8_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_blender_249_Makefile_nth8_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
@@ -430,10 +411,11 @@ Voici quelques exemples des performances bien meilleures obtenues en exploitant 
     \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth8.pdf}
     \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth8_eff.pdf}
     \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth8_acc.pdf}
-    \includegraphics[scale=0.45]{res/sujet_makefiles_premier_Makefile_nth8_work.pdf}
 % \caption{Diagramme des cas d'utilisation}
 % \end{figure}
 \end{center}
+
+\subsection {Analyse}
 
 Les courbes expérimentales obtenues semblent être plutôt homogènes. Quelques points semblent néanmoins étranges puisqu'ils induisent une augmentation pour un point lorsque l'on attend une diminution. Cela peut s'expliquer par l'incertitude des mesures expérimentales. Cela peut également s'expliquer par l'une des extensions que nous avons réalisées : lorsque l'on envoie une tache à un esclave, on ne renvoie pas les dépendances qu'on lui a déjà précédemment envoyé. En rajoutant des machines on diminue la probabilité de renvoyer à un esclave une tache pour laquelle il a déjà reçu des dépendances ce qui augmente le temps réseau (cette optimisation est moins efficace dans ces cas-là, mais nous obtenons tout de même de meilleurs résultats qu'en ne l'implémentant pas).
 
